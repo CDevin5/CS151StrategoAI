@@ -22,9 +22,11 @@
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
 from util import *
+from piece import *
 import time, os
 import traceback
 import sys
+
 
 #######################
 # Parts worth reading #
@@ -68,25 +70,11 @@ class Directions:
                WEST: EAST,
                STOP: STOP}
 
-class PieceNames:
-    TEN = '10'
-    NINE = '9'
-    EIGHT = '8'
-    SEVEN = '7'
-    SIX = '6'
-    FIVE = '5'
-    FOUR = '4'
-    THREE = '3'
-    TWO = '2'
-    ONE = '1'
-    BOMB = 'Bomb'
-    FLAG = 'Flag'
-
 class Configuration:
     """
     A Configuration holds a list of the pieces of an agent. Pieces are repesented as a tuple:
-    piece = (name, position, inPlay), where name is the name of the piece, and inPlay is a bool
-    that is true if the piece is alive.
+    piece = (name, position, color), where name is the name of the piece, and color is which
+    side the pice is on.
 
     The convention for positions, like a graph, is that (0,0) is the lower left corner, x increases
     horizontally and y increases vertically.  Therefore, north is the direction of increasing y, or (0,1).
@@ -456,19 +444,24 @@ class GameStateData:
         for agentState in self.agentStates:
             if agentState == None: continue
             if agentState.configuration == None: continue
-            x,y = [int( i ) for i in nearestPoint( agentState.configuration.pieces )]
-            # agent_dir = agentState.configuration.direction
-            if agentState.isPlayer:
-                map[x][y] = self._pacStr( agent_dir )
-            else:
-                map[x][y] = self._ghostStr( agent_dir )
 
-        for x, y in self.capsules:
-            map[x][y] = 'o'
+            for (name, (x,y), color) in agentState.configuration.pieces:
+                map[x][y] = name
+                    
+
+            # x,y = [int( i ) for i in nearestPoint( agentState.configuration.pieces )]
+            # agent_dir = agentState.configuration.direction
+            # if agentState.isPlayer:
+            #     map[x][y] = self._pacStr( agent_dir )
+            # else:
+            #     map[x][y] = self._ghostStr( agent_dir )
+
+        # for x, y in self.capsules:
+        #     map[x][y] = 'o'
 
         return str(map) + ("\nScore: %d\n" % self.score)
 
-    def _foodWallStr( self, hasFood, hasWall ):
+    def _foodWallStr( self, hasWall ):
         # if hasFood:
         #     return '.'
         if hasWall:
