@@ -24,10 +24,10 @@ TAKE_FLAG  = 3
 
 class Piece:
 
-    def __init__(self, rank, position, color):
+    def __init__(self, rank, position, agentIndex):
         self.rank = rank
         self.position = position
-        self.color = color
+        self.agentIndex = agentIndex
 
         self.canMove = True
 
