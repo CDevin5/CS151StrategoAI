@@ -1,4 +1,4 @@
-from gamestate import GameState, Agent
+from gameState import GameState, Agent
 
 class Game:
     def __init__(self, agents, startAgentIndex):
@@ -20,20 +20,20 @@ class Game:
             action = agent.getAction(self.state)
 
             self.state = self.state.getSuccessor(agentIndex, action)
-            self.state.show()
+            print self.state
 
-            if self.state.isWin:
-                print "You Win!"
+            if self.state.isWon(0):
+                print "Player 0 wins!"
                 return
-            if self.state.isLose:
-                print "You Lose"
+            if self.state.isWon(1):
+                print "Player 1 wins!"
                 return
 
             agentIndex = 1-agentIndex
 
 def main():
-    agent0 = Agent()
-    agent1 = Agent()
+    agent0 = Agent(0)
+    agent1 = Agent(1)
     game = Game([agent0, agent1], 1)
 
     game.run()
