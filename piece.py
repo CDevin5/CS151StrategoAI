@@ -34,6 +34,18 @@ class Piece:
         if rank == BOMB or rank == FLAG:
             self.canMove = False
 
+    def __str__(self):
+        if self.rank > 0 and self.rank < 10:
+            return str(self.rank)
+        elif self.rank == BOMB:
+            return 'B'
+        elif self.rank == SPY:
+            return 'S'
+        elif self.rank == FLAG:
+            return 'F'
+        else:
+            return '?'
+
     def attack(self, otherPiece):
         if self.canMove:
             if otherPiece.rank == FLAG:
