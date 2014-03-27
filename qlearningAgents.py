@@ -16,6 +16,7 @@
 #from game import *
 from LearningAgents import ReinforcementAgent
 from featureExtractors import *
+from piece import *
 
 import random,util,math
 
@@ -136,8 +137,31 @@ class ApproximateQAgent(QLearningAgent):
     """
     def __init__(self, extractor='IdentityExtractor', **args):
         self.featExtractor = util.lookup(extractor, globals())()
-        
         self.weights = util.Counter()
+
+    def getStartSpots(self):
+        """ Generates a list of the positions available for initial setup """
+        spots = []
+        if self.index == 0:
+            startRow = 0
+            endRow = 3
+        if self.index == 1:
+            startRow = 5
+            endRow = 8
+        for row in range(startRow, endRow):
+            for col in range(8):
+                spots += [(col, row)]
+        return spots
+
+    def makeSetup(self):
+        """ Returns a list of pieces"""
+        startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
+        startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
+        pieces = []
+        for i in len(startingRanks):
+            pieces += [piece.Piece(startingRanks[i], startingSpots[i], self.index)]
+        return pieces
+
 
     def getAction(self, state):
         """
