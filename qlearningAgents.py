@@ -13,8 +13,8 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-from game import *
-from learningAgents import ReinforcementAgent
+#from game import *
+from LearningAgents import ReinforcementAgent
 from featureExtractors import *
 
 import random,util,math
@@ -136,7 +136,7 @@ class ApproximateQAgent(QLearningAgent):
     """
     def __init__(self, extractor='IdentityExtractor', **args):
         self.featExtractor = util.lookup(extractor, globals())()
-        PacmanQAgent.__init__(self, **args)
+        
         self.weights = util.Counter()
 
     def getAction(self, state):
@@ -202,3 +202,5 @@ class ApproximateQAgent(QLearningAgent):
             # you might want to print your weights here for debugging
             "*** YOUR CODE HERE ***"
             pass
+
+
