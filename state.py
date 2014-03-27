@@ -51,26 +51,57 @@ class GameState:
 			return self.player1pieces_dead
 
 	def getFlag(self, agent):
-		if agent == 0:
-			for piece in self.player0pieces_alive:
-				if piece.rank == FLAG:
-					return piece
+		
+		for piece in self.getAlivePieces(agent):
+			if piece.rank == FLAG:
+				return piece
 
-			return None
-
-		else:
-			for piece in self.player1pieces_alive:
-				if piece.rank == FLAG:
-					return piece
-
-			return None
+		return None
 
 	def getPieceAtPos(self, position):
-		(x,y) = position
-		if x > 7 or x < 0 or y > 7 or y < 0:
+		x,y = position
+		if not isInBounds(position):
 			return None
+		else:
+			return self.pieces[x][y]
+
+	def isFreeAtPos(self, position):
+		x,y = position
+		if self.pieces[x][y] == None:
+			return True
+		else:
+			return False
 
 		return self.pieces[x][y]
+
+	def isEnemyAtPos(self, position, agent):
+		x,y = position
+		piece = self.pieces[x][y]
+		if piece == None:
+			return False
+		else:
+			return piece.agentIndex != agent
+
+	def isInBounds(self, position):
+		x,y = position
+
+		if x > 7 or x < 0 or y > 7 or y < 0:
+			return False
+		else: 
+			return True
+
+	def getNeighborPositions(self, piece):
+		x,y = piece.position
+		neighbors = []
+
+		if isInBounds(x+1,y):
+			neighbors.append((x+1,y), EAST)
+		if isInBounds(x-1,y):
+			neighbors.append((x-1,y), WEST)
+		if isInBounds(x,y+1):
+			neighbors.append((x,y+1), NORTH)
+		if isInBounds(x,y-1):
+			neighbors.append((x,y-1), SOUTH)
 
 	def getState(self, agent):
 		return self.state
@@ -78,13 +109,33 @@ class GameState:
 	def getSuccessor(self, agent, action):
 
 	def getLegalActions(self, agent):
-		if agent == 0:
-			for piece in self.player0pieces_alive
+
+		actions = []
+		for piece in self.getAlivePieces(agent):
+			neighborPos = getNeighborPositions(piece)
+			for pos, direction in neighborPos:
+				if isFreeAtPos(pos) or isEnemyAtPos(pos):
+					actions.append(piece, direction)
+			
+	def isWon(agent):
+		if agent == 0
+			if getFlag(1) == None:
+				return True
+			else:
+				return getLegalActions(1) == []
 
 		else:
-			for piece in self.player0pieces_alive
+			if getFlag(0) == None:
+				return True
+			else:
+				return getLegalActions(0) == []
 
-	def isWon(agent):
+
+class Directions:
+    NORTH = 'North'
+    SOUTH = 'South'
+    EAST  = 'East'
+    WEST  = 'West'
 
 class Grid:
     """
