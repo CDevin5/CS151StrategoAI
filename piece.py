@@ -3,18 +3,18 @@
 # position on the board, 
 
 # Piece names
-MARSHALL   = 10
-GENERAL    = 9
-COLONEL    = 8
-MAJOR      = 7
-CAPTAIN    = 6
-LIEUTENANT = 5
-SERGEANT   = 4
-MINER      = 3
-SCOUT      = 2
-SPY        = 1
-BOMB       = 11
-FLAG       = 0
+MARSHALL   = 1
+GENERAL    = 2
+COLONEL    = 3
+MAJOR      = 4
+CAPTAIN    = 5
+LIEUTENANT = 6
+SERGEANT   = 7
+MINER      = 8
+SCOUT      = 9
+SPY        = 10
+BOMB       = 0
+FLAG       = 11
 
 # Fight outcomes
 WIN_FIGHT  = 1
@@ -47,9 +47,9 @@ class Piece:
             elif self.rank == BOMB and otherPiece.rank == MINER:
                 return LOSE_FIGHT
             else:
-                if self.rank > otherPiece.rank:
+                if self.rank < otherPiece.rank:
                     return WIN_FIGHT
-                elif self.rank < otherPiece.rank:
+                elif self.rank > otherPiece.rank:
                     return LOSE_FIGHT
                 else:
                     return TIE_FIGHT
