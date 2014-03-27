@@ -13,7 +13,8 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-from game import Directions, Agent, Actions
+from game import Directions, Actions
+from Agent import Agent
 
 import random,util,time
 
