@@ -2,14 +2,14 @@ from piece import *
 
 class GameState:
 
-	def __init__(self, agent0setup, agent1setup, layout):
+	def __init__(self, agent0setup, agent1setup, agent0dead = [], agent1dead = [], layout):
 		self.layout = layout
 
 		self.player0pieces_alive = agent0setup
 		self.player1pieces_alive = agent1setup
 
-		self.player0pieces_dead = []
-		self.player1pieces_dead = []
+		self.player0pieces_dead = agent0dead
+		self.player1pieces_dead = agent1dead
 
 		width, height = self.layout.width, self.layout.height
 		self.state = Grid(width, height)
@@ -19,7 +19,7 @@ class GameState:
             for y in range(height):
                 walls = self.layout.walls
                 self.state[x][y] = self._wallStr(walls[x][y])
-                self.pieces[x][y] = None
+				self.pieces[x][y] = None
 
         for piece in self.player0pieces_alive:
             self.state[x][y] = piece.rank
@@ -103,19 +103,70 @@ class GameState:
 		if isInBounds(x,y-1):
 			neighbors.append((x,y-1), SOUTH)
 
+	def copy(self):
+		copyState = GameState(self.player0pieces_alive, self.player1pieces_alive, self.player0pieces_dead, self.player1pieces_dead, self.layout)
+
 	def getState(self, agent):
 		return self.state
 
 	def getSuccessor(self, agent, action):
+		successor = self.copy()
+
+		piece, direction, newPos = action
+		oldx, oldy = piece.position
+		x,y = newPos
+
+		if successor.isEnemyAtPos(newPos):
+			enemy = getPieceAtPos(newPos)
+			result = piece.attack(enemy)
+
+			if result == LOSE_FIGHT:
+				successor.killPiece(piece)
+			if result == WIN_FIGHT:
+				successor.killPiece(enemy)
+			if result == TIE_FIGHT:
+				successor.killPiece(piece)
+				successor.killPiece(enemy)
+
+		piece.position = newPos
+		successor.state[oldx][oldy] = successor._wallStr(walls[oldx][oldy])
+		successor.pieces[oldx][oldy] = None
+
+		successor.state[x][y] = piece.rank
+		successor.pieces[x][y] = piece
+
+		return successor
+
+	def killPiece(self, piece, agent):
+		if agent == 0:
+			self.player0pieces_dead.append(piece)
+			self.player0pieces_alive.remove(piece)
+
+			x,y = piece.position
+			self.state[x][y] = self._wallStr(walls[x][y])
+			self.pieces[x][y] = None
+
+		else:
+			self.player1pieces_dead.append(piece)
+			self.player1pieces_alive.remove(piece)
+
+			x,y = piece.position
+			self.state[x][y] = self._wallStr(walls[x][y])
+			self.pieces[x][y] = None
+
 
 	def getLegalActions(self, agent):
 
 		actions = []
+
 		for piece in self.getAlivePieces(agent):
-			neighborPos = getNeighborPositions(piece)
-			for pos, direction in neighborPos:
-				if isFreeAtPos(pos) or isEnemyAtPos(pos):
-					actions.append(piece, direction)
+			if piece.canMove:
+				neighborPos = getNeighborPositions(piece)
+
+				for pos, direction in neighborPos:
+					if isFreeAtPos(pos) or isEnemyAtPos(pos):
+
+						actions.append(piece, direction, pos)
 			
 	def isWon(agent):
 		if agent == 0
