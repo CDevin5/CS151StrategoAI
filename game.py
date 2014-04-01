@@ -1,4 +1,5 @@
-from gameState import GameState, Agent
+from state import *
+from Agent import *
 
 class Game:
     def __init__(self, agents, startAgentIndex):
