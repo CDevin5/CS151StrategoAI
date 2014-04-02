@@ -24,3 +24,12 @@ class RandomAgent(Agent):
     def getAction(self, state):
         actions = state.getLegalActions()
         return random.choice(legalActions)
+
+class HumanAgent(Agent):
+    """
+    An Agent that queries the user for an action
+    """
+    def getAction(self, state):
+        print state
+        userInput = raw_input("What is your move? [square of piece's current location] [square to move it to]").split()
+        
