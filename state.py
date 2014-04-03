@@ -36,7 +36,7 @@ class GameState:
 			return ' '
 
 	def __str__(self):
-		return str(self.grid)
+		return str(self.state)
 
 	def getAlivePieces(self, agent):
 		if agent == 0:
