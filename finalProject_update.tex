@@ -7,6 +7,7 @@
 \usepackage{times}
 \usepackage{helvet}
 \usepackage{courier}
+\usepackage{amsmath}
 \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
@@ -32,20 +33,58 @@ Claremont, California 91711\\
 \section{Problem }
 We plan to write an artificially intelligent agent that can play the game Stratego. Stratego is a board game with two players. Each player has 40 pieces representing soldiers, bombs, and a flag. The objective of the game is to find the opponent's flag. The win condition is to either capture the opponent's flag or capture so many of their pieces that they can no longer make a move. The pieces are placed on the board facing away from one another so that a player cannot see what their opponent's pieces are, so it is a game where we have incomplete information about our adversary, which will make it an interesting artificial intelligence problem for us to solve. The different pieces have a different amount of strength associated with them, and this strength is only revealed to the other player when one pices attacks another. The goal of our project will be to make an AI that can successfully play Stratego on a human level.
 
-\section{Artificial Intelligence Methods}
+\section{Method}
 We plan to use reinforcement learning to create our AI. We will probably use Q-learning, but we are still looking into other options. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we will need to determine relevant features (such as number of pieces, positions of pieces, and identity of our pieces) to represent states. 
 
 We plan to create a model of the game in Python. That model will be able to play two AIs against each other, or play an AI against a human opponent. We will train our agent by running two versions of the agent against each other. 
+
+\section{Current Work}
 
 \section{Metrics of Success}
 We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.
 
 
-\section{Feasibility}
-The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. Since our agent will have incomplete information about the state of the world, we know that this is a prroblem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
+%\section{Feasibility}
+%The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. Since our agent will have incomplete information about the state of the world, we know that this is a prroblem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
+
+\section{Literature Review}
+{\bf Hasinoff}\\
+The paper ``Reinforcement Learning for Problems with Hidden State'' by Hasinoff describes ways of dealing with POMDPs (partially observable Markov decision processes): MDPs where some parts of the state are unknown. For reinforcement learning, Hasinoff explains that greedy Q-learning is non-optimal because of the unknown information: the values might never converge. The problem with memoryless learning (such as q-learning) that multiple states are grouped in the same observation (the paper gives the example going through a maze but only knowing number of walls around you. Without memory, you might see taking a step as putting you in the same state as if you had not taken a step). In POMDPs, this problem is inherent because even with a perfect feature vector, some states are indistinguishable because of the hidden information. One way of distinguishing states is to give the agent memory.
+
+Hasinoff describes Nearest Sequence Memory (NSM). NSM is a method to determine which states among those with the same feature vector are actually the same state. It is based off assumption that states that were reached by a similar history of experiences are more likely to be the same state. The algorithm is as follows:
+\begin{enumerate}
+\item Record the history of experiences (action, observation, and reward or last $n$ experiences).
+\item Using the distance metric, find the $k$ previous states that are closest to the current state.
+\item Approximate $Q$-values for current state by averaging values for the $k$ states.
+\item Pick an action, then add the experience to the history.
+\item Apply the standard $Q$-learning update to all states involved.\\
+\end{enumerate}
+
+\noindent {\bf Hu and Wellman}\\
+In the paper ``Multiagent Reinforcement Learning: Theoretical Framework and an Algorithm'', Hu and Wellman describe a way for reinforcement learning to treat other agents differently from the environment. Usually in reinforcement learning, an agent treats other agents the same way that it would treat elements of the environment. They assume that agents have ``incomplete but perfect information'' about each other, which means that they do not know the reward function for the other agent but can see their immediate rewards and actions. An agent cannot just maximize its own $Q$-values, since those values depend on the actions of the other agent. They propose that each agent should maintain two tables of $Q$-values --  one of its own, and one of its opponents'. The $Q$-values for the agent are updated by:
+\begin{align*}
+&Q_{t+1}^1(s,a^1,a^2) = \\
+&(1-\alpha_t)Q_t^1(s,a^1,a^2)+\alpha_t\left[r_t^1 +\beta \pi^1(s')Q_t^1(s') \pi^2(s')\right]
+\end{align*}
+The $Q$-values for the opponent are updated by:
+\begin{align*}
+&Q_{t+1}^2(s,a^1,a^2) = \\
+&(1-\alpha_t)Q_t^2(s,a^1,a^2)+\alpha_t\left[r_t^2 +\beta \pi^1(s')Q_t^2(s') \pi^2(s')\right]
+\end{align*}
+When the game is a zero-sum game, we only need one $Q$-table, since a gain for one agent means a loss for the other. Therefore, the $Q$-learning algorithm will be the following for a zero-sum game: 
+\begin{align*}
+&Q_{t+1}(s,a^1,a^2) = \\
+&(1-\alpha_t)Q_t(s,a^1,a^2)+\\
+&\alpha_t\left[r_t +\beta \max_{\pi^1(s')\in\sigma(A^1)} \pi^1(s')Q_t(s') \pi^2(s')\right]
+\end{align*}
+This is different from normal $Q$-learning, in that we are accounting for the policy of the second agent.\\
+
+\noindent{\bf Littman}\\
+Many reinforcement learning algorithms assume that the agent's environment is stationary. ``Markov games as a framework for multi-agent reinforcement learning'', by Michael L. Littman, looks at applying reinforcement learning to two-player zero-sum games using the Markov game framework instead of MDP. Instead of just having one set of actions for each state, a Markov game has a collection of action sets, one of each agent. In an MDP, there is always an undominated policy for each state. In a Markov game, however, there may not be, because the result of any action depends on the opponent's action. Game theory solves this by using minimax. Find an optimal policy using value iteration is essentially the same for Markov games as it is for MDPs. You just consider two moves at a time (yours and your opponent's) instead of just one. Similarly, $Q$-learning is easily adaptable from Markov games to MDPs. Again, you just consider both your move and your opponent's, instead of just yours. This algorithm is called minimax-$Q$, since it is $Q$-learning using minimax instead of just max.
+
 
 \section{References}
-Hasinoff, S. W. 2003. Reinforcement Learning for problems with Hidden State. Department of Computer Science, University of Toronto.
+Hasinoff, S. W. 2003. ``Reinforcement Learning for problems with Hidden State''. Department of Computer Science, University of Toronto.
 
 
 \end{document}
