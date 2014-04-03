@@ -14,7 +14,7 @@
 
 
 from util import manhattanDistance
-from game import Grid
+from state import Grid
 import os
 import random
 
@@ -130,11 +130,11 @@ class Layout:
         #     self.numGhosts += 1
 def getLayout(name, back = 2):
     if name.endswith('.lay'):
-        layout = tryToLoad('layouts/' + name)
-        if layout == None: layout = tryToLoad(name)
+        layout = tryToLoad(name)
+        # if layout == None: layout = tryToLoad(name)
     else:
-        layout = tryToLoad('layouts/' + name + '.lay')
-        if layout == None: layout = tryToLoad(name + '.lay')
+        layout = tryToLoad(name + '.lay')
+        # if layout == None: layout = tryToLoad(name + '.lay')
     if layout == None and back >= 0:
         curdir = os.path.abspath('.')
         os.chdir('..')
