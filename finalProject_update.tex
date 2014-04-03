@@ -35,34 +35,6 @@ We plan to write a $Q$-learning agent that can learn to play the game Stratego. 
 
 The pieces are placed on the board facing away from one another so that a player cannot see what their opponent's pieces are, so it is a game where we have incomplete information about our adversary, which will make it an interesting artificial intelligence problem for us to solve. The different pieces have a different amount of strength associated with them, and this strength is only revealed to the other player when one pices attacks another. The goal of our project will be to make an AI that can successfully play Stratego on a human level.\\
 
-\section{Method}
-We plan to use reinforcement learning to create our AI. We will use feature-based $Q$-learning. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we will need to determine relevant features to represent search states. We have decided that some of those relevant features include: 
-\begin{itemize}
-\item The number of pieces the agent has left and the reciprocal of the number of pieces the opponent has left
-\item The sum of the ranks of the agent's remaining pieces and the reciprocal of the sum of the ranks of the opponent's remaining pieces
-\item The number of bomb diffusers that the agent has on the board 
-\item The number of bombs that the agent has on the board 
-\item The distance between the agent's flag and the nearest enemy piece 
-\item  The sum of the rows of all of the agent's and opponent's pieces on the board
-\item The number of squares adjacent to the agent's flag that are occupied by enemy pieces.
-\end{itemize}
-We have created a model of the game in Python. The model will be able to play two AIs against each other, or play an AI against a human opponent. We will train our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
-
-\section{Current Work}
-
-At this time, we have completed a working Stratego game, as well as an agent that takes human input so that we can play the game, and an agent that makes random moves, so that we have something to compare our learning agent to. 
-\\
-
-\section{Metrics of Success}
-We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.
-
-Regardless of whether the AI we write can meet these goals, we will learn how well reinforcement learning can work on a game with a state space as large as that of Stratego, as well as gain a lot of experience in writing artificially intelligent agents and figuring out which features of the world state would contribute most towards an artificially intelligent agent learning intelligent behavior.
-\\
-
-\section{Feasibility}
-The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. Since our agent will have incomplete information about the state of the world, we know that this is a prroblem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
-\\
-
 \section{Literature Review}
 To research methods for our project, we read several papers that described how to deal with having imperfect information about the world and playing against other agents.\\
 
@@ -108,6 +80,36 @@ In a Markov game, however, there may not be, because the result of any action de
 
 This paper is relevant to our project, as the environment in our game will not be stationary, since the other agent will be moving pieces as well, and the results of our actions could depend on the opponents actions. Therefore, we could use this mathod to maximize score against our opponent by using minimax $Q$-learning to take the actions of the opponent into account.
 \\
+
+\section{Method}
+We plan to use reinforcement learning to create our AI. We will use feature-based $Q$-learning. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we will need to determine relevant features to represent search states. We have decided that some of those relevant features include: 
+\begin{itemize}
+\item The number of pieces the agent has left and the reciprocal of the number of pieces the opponent has left
+\item The sum of the ranks of the agent's remaining pieces and the reciprocal of the sum of the ranks of the opponent's remaining pieces
+\item The number of bomb diffusers that the agent has on the board 
+\item The number of bombs that the agent has on the board 
+\item The distance between the agent's flag and the nearest enemy piece 
+\item  The sum of the rows of all of the agent's and opponent's pieces on the board
+\item The number of squares adjacent to the agent's flag that are occupied by enemy pieces.
+\end{itemize}
+We have created a model of the game in Python. The model will be able to play two AIs against each other, or play an AI against a human opponent. We will train our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
+
+\section{Current Work}
+
+At this time, we have completed a working Stratego game, as well as an agent that takes human input so that we can play the game, and an agent that makes random moves, so that we have something to compare our learning agent to. 
+\\
+
+\section{Metrics of Success}
+We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.
+
+Regardless of whether the AI we write can meet these goals, we will learn how well reinforcement learning can work on a game with a state space as large as that of Stratego, as well as gain a lot of experience in writing artificially intelligent agents and figuring out which features of the world state would contribute most towards an artificially intelligent agent learning intelligent behavior.
+\\
+
+\section{Feasibility}
+The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. Since our agent will have incomplete information about the state of the world, we know that this is a prroblem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
+\\
+
+
 
 \section{References}
 Hasinoff, S. W. 2003. ``Reinforcement Learning for problems with Hidden State''. Department of Computer Science, University of Toronto.
