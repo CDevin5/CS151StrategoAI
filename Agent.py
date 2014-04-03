@@ -33,19 +33,20 @@ class RandomAgent(Agent):
         pieces = []
         for i in range(len(startingRanks)):
             pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
+        print [(str(p), p.position) for p in pieces]
         return pieces
 
     def getStartSpots(self):
         """ Generates a list of the positions available for initial setup """
         spots = []
         if self.index == 0:
-            startRow = 0
-            endRow = 3
+            startRow = 1
+            endRow = 4
         if self.index == 1:
-            startRow = 5
-            endRow = 8
+            startRow = 6
+            endRow = 9
         for row in range(startRow, endRow):
-            for col in range(8):
+            for col in range(1,9):
                 spots += [(col, row)]
         return spots
 
@@ -98,6 +99,6 @@ class HumanAgent(Agent):
             endRow = 9
         for row in range(startRow, endRow):
             for col in range(1,9):
-                spots += [(row, col)]
+                spots += [(col, row)]
         return spots
 

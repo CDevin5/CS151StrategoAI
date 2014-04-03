@@ -18,18 +18,18 @@ class GameState:
         for x in range(width):
             for y in range(height):
                 self.walls = self.layout.walls
-                self.state[y][x] = self._wallStr(self.walls[y][x])
-                self.pieces[y][x] = None
+                self.state[x][y] = self._wallStr(self.walls[x][y])
+                self.pieces[x][y] = None
 
         for piece in self.player0pieces_alive:
             (x,y) = piece.position
-            self.state[y][x] = str(piece)
-            self.pieces[y][x] = piece
+            self.state[x][y] = str(piece)
+            self.pieces[x][y] = piece
 
         for piece in self.player1pieces_alive:
             (x,y) = piece.position
-            self.state[y][x] = str(piece)
-            self.pieces[y][x] = piece
+            self.state[x][y] = str(piece)
+            self.pieces[x][y] = piece
 
     def _wallStr(self, hasWall):
         if hasWall:
@@ -135,7 +135,7 @@ class GameState:
         successor.state[oldx][oldy] = successor._wallStr(self.walls[oldx][oldy])
         successor.pieces[oldx][oldy] = None
 
-        successor.state[x][y] = piece.rank
+        successor.state[x][y] = str(piece)
         successor.pieces[x][y] = piece
 
         return successor

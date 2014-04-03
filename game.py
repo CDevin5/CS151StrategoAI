@@ -24,7 +24,8 @@ class Game:
             print "--------------\n"
 
             action = agent.getAction(self.state)
-            print "ACTION:", action
+            (piece, pos) = action
+            print "ACTION:", (str(piece), piece.position, pos)
 
             self.state = self.state.getSuccessor(agentIndex, action)
             print self.state
@@ -39,7 +40,7 @@ class Game:
             agentIndex = 1-agentIndex
 
 def main():
-    agent0 = HumanAgent(0)
+    agent0 = RandomAgent(0)
     agent1 = HumanAgent(1)
     game = Game([agent0, agent1], 0)
 
