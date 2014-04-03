@@ -95,13 +95,15 @@ class GameState:
 		neighbors = []
 
 		if isInBounds(x+1,y):
-			neighbors.append((x+1,y), EAST)
+			neighbors.append((x+1,y))
 		if isInBounds(x-1,y):
-			neighbors.append((x-1,y), WEST)
+			neighbors.append((x-1,y))
 		if isInBounds(x,y+1):
-			neighbors.append((x,y+1), NORTH)
+			neighbors.append((x,y+1))
 		if isInBounds(x,y-1):
-			neighbors.append((x,y-1), SOUTH)
+			neighbors.append((x,y-1))
+
+		return neighbors
 
 	def copy(self):
 		copyState = GameState(self.layout, self.player0pieces_alive, self.player1pieces_alive, self.player0pieces_dead, self.player1pieces_dead)
@@ -112,7 +114,7 @@ class GameState:
 	def getSuccessor(self, agent, action):
 		successor = self.copy()
 
-		piece, direction, newPos = action
+		piece, newPos = action
 		oldx, oldy = piece.position
 		x,y = newPos
 
@@ -163,10 +165,12 @@ class GameState:
 			if piece.canMove:
 				neighborPos = getNeighborPositions(piece)
 
-				for pos, direction in neighborPos:
+				for pos in neighborPos:
 					if isFreeAtPos(pos) or isEnemyAtPos(pos):
 
-						actions.append(piece, direction, pos)
+						actions.append(piece, pos)
+
+		return actions
 			
 	def isWon(agent):
 		if agent == 0:
@@ -180,13 +184,6 @@ class GameState:
 				return True
 			else:
 				return getLegalActions(0) == []
-
-
-class Directions:
-	NORTH = 'North'
-	SOUTH = 'South'
-	EAST  = 'East'
-	WEST  = 'West'
 
 class Grid:
 	"""
