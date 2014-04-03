@@ -18,7 +18,11 @@ class Game:
 
         while not self.gameOver:
             agent = self.agents[agentIndex]
+            print "AGENT " + agent + "'s TURN"
+            print "--------------\n"
+
             action = agent.getAction(self.state)
+            print "ACTION:", action
 
             self.state = self.state.getSuccessor(agentIndex, action)
             print self.state
