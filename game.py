@@ -1,5 +1,6 @@
 from state import *
 from Agent import *
+from layout import getLayout
 
 class Game:
     def __init__(self, agents, startAgentIndex):
@@ -11,14 +12,15 @@ class Game:
     def run(self):
         agentIndex = self.startAgentIndex
 
-        agent0setup = self.agents[0].setUpBoard()
-        agent1setup = self.agents[1].setUpBoard()
+        agent0setup = self.agents[0].makeSetup()
+        agent1setup = self.agents[1].makeSetup()
 
-        self.state = GameState(agent0setup, agent1setup)
+        self.state = GameState(getLayout("smallGrid.lay"),agent0setup, agent1setup)
 
         while not self.gameOver:
             agent = self.agents[agentIndex]
-            print "AGENT " + agent + "'s TURN"
+            print '\n'
+            print "AGENT", agent.index, "'s TURN"
             print "--------------\n"
 
             action = agent.getAction(self.state)
@@ -37,9 +39,9 @@ class Game:
             agentIndex = 1-agentIndex
 
 def main():
-    agent0 = Agent(0)
-    agent1 = Agent(1)
-    game = Game([agent0, agent1], 1)
+    agent0 = HumanAgent(0)
+    agent1 = HumanAgent(1)
+    game = Game([agent0, agent1], 0)
 
     game.run()
 
