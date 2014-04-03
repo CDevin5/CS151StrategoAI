@@ -157,9 +157,7 @@ class GameState:
             self.state[x][y] = self._wallStr(self.walls[x][y])
             self.pieces[x][y] = None
 
-
     def getLegalActions(self, agent):
-
         actions = []
 
         for piece in self.getAlivePieces(agent):
