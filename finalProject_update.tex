@@ -1,0 +1,54 @@
+%File: formatting-instruction.tex
+\documentclass[letterpaper]{article}
+
+%\usepackage{blindtext}
+% Required packages
+\usepackage{aaai}
+\usepackage{times}
+\usepackage{helvet}
+\usepackage{courier}
+\frenchspacing
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+\pdfinfo{
+/Title (Learning Stratego)
+/Author (Michelle Chesley, Coline Devin, May Lynn Forssen)}
+% section numbers
+\setcounter{secnumdepth}{0}
+
+\begin{document}
+% Title, author, and address information
+\title {Learning Stratego}
+\author{Michelle Chesley \and Coline Devin \and May Lynn Forssen\\
+Harvey Mudd College\\
+301 Platt Blvd\\
+Claremont, California 91711\\
+}  
+% The file aaai.sty is the style file for AAAI Press 
+% proceedings, working notes, and technical reports.
+%
+\maketitle
+
+\section{Problem }
+We plan to write an artificially intelligent agent that can play the game Stratego. Stratego is a board game with two players. Each player has 40 pieces representing soldiers, bombs, and a flag. The objective of the game is to find the opponent's flag. The win condition is to either capture the opponent's flag or capture so many of their pieces that they can no longer make a move. The pieces are placed on the board facing away from one another so that a player cannot see what their opponent's pieces are, so it is a game where we have incomplete information about our adversary, which will make it an interesting artificial intelligence problem for us to solve. The different pieces have a different amount of strength associated with them, and this strength is only revealed to the other player when one pices attacks another. The goal of our project will be to make an AI that can successfully play Stratego on a human level.
+
+\section{Artificial Intelligence Methods}
+We plan to use reinforcement learning to create our AI. We will probably use Q-learning, but we are still looking into other options. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we will need to determine relevant features (such as number of pieces, positions of pieces, and identity of our pieces) to represent states. 
+
+We plan to create a model of the game in Python. That model will be able to play two AIs against each other, or play an AI against a human opponent. We will train our agent by running two versions of the agent against each other. 
+
+\section{Metrics of Success}
+We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.
+
+
+\section{Feasibility}
+The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. Since our agent will have incomplete information about the state of the world, we know that this is a prroblem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
+
+\section{References}
+Hasinoff, S. W. 2003. Reinforcement Learning for problems with Hidden State. Department of Computer Science, University of Toronto.
+
+
+\end{document}
+
+
+
