@@ -17,7 +17,10 @@ class Game:
 
         self.state = GameState(getLayout("smallGrid.lay"),agent0setup, agent1setup)
 
+        turns = 0
+
         while not self.gameOver:
+            turns += 1
             agent = self.agents[agentIndex]
             print '\n'
             print "AGENT", agent.index, "'s TURN"
@@ -32,16 +35,17 @@ class Game:
 
             if self.state.isWon(0):
                 print "Player 0 wins!"
-                return
+                break
             if self.state.isWon(1):
                 print "Player 1 wins!"
-                return
+                break
 
             agentIndex = 1-agentIndex
+        print "The game took", turns, "turns."
 
 def main():
     agent0 = RandomAgent(0)
-    agent1 = HumanAgent(1)
+    agent1 = RandomAgent(1)
     game = Game([agent0, agent1], 0)
 
     game.run()
