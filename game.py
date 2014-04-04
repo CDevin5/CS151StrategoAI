@@ -45,7 +45,7 @@ class Game:
         print "The game took", turns, "turns."
 
 def main():
-    agent0 = ApproximateQAgent(0)
+    agent0 = RandomAgent(0)
     agent1 = RandomAgent(1)
     game = Game([agent0, agent1], 0)
 
