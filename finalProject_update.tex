@@ -113,6 +113,8 @@ We have written a feature extractor written that examines the game state and ext
 
 We have also written a couple different agents. We have a random agent, that randomly picks a legal action to play. We have a human agent, that queries the user for a piece to move and a location to lose it to. The agent then checks that the move is legal. The human agent that we have allows a player to perform any legal move on one of their pieces during their turn. We have started writing a reinforcement learning agent, but have not tested it yet.\\
 
+We have successfully run several games playing the random agents against one another and they finished successfully, usually taking several hundred turns to finish and with each player winning about half the time. We can also successfully play games using the human agent by manually giving input as to where each piece should move.\\
+
 A difficulty we face at the moment is setting up the game. When playing Stratego, a large portion of the game is choosing where to place each piece before starting the game. So far, we have an algorithm for generating random setups, but we still need to implement reinforcement learning on the setup. \\
 
 \section{Metrics of Success}
