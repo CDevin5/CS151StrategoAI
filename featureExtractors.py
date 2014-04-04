@@ -1,5 +1,6 @@
 from util import Counter
 import piece
+import state
 
 class FeatureExtractors:
     def getFeatures(self, state, agent):

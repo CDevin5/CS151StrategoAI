@@ -135,32 +135,35 @@ class ApproximateQAgent(QLearningAgent):
        and update.  All other QLearningAgent functions
        should work as is.
     """
-    def __init__(self, extractor='IdentityExtractor', **args):
-        self.featExtractor = util.lookup(extractor, globals())()
+    def __init__(self, index, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+        self.featExtractor = FeatureExtractors()
         self.weights = util.Counter()
-
-    def getStartSpots(self):
-        """ Generates a list of the positions available for initial setup """
-        spots = []
-        if self.index == 0:
-            startRow = 0
-            endRow = 3
-        if self.index == 1:
-            startRow = 5
-            endRow = 8
-        for row in range(startRow, endRow):
-            for col in range(8):
-                spots += [(col, row)]
-        return spots
+        self.index = index
+        QLearningAgent.__init__(self, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1)
 
     def makeSetup(self):
         """ Returns a list of pieces"""
         startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
         startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
         pieces = []
-        for i in len(startingRanks):
+        for i in range(len(startingRanks)):
             pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
+        print [(str(p), p.position) for p in pieces]
         return pieces
+
+    def getStartSpots(self):
+        """ Generates a list of the positions available for initial setup """
+        spots = []
+        if self.index == 0:
+            startRow = 1
+            endRow = 4
+        if self.index == 1:
+            startRow = 6
+            endRow = 9
+        for row in range(startRow, endRow):
+            for col in range(1,9):
+                spots += [(col, row)]
+        return spots
 
 
     def getAction(self, state):

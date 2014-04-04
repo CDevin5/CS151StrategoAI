@@ -13,7 +13,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-from game import Directions, Actions
+#from game import Directions, Actions
 from Agent import Agent
 
 import random,util,time
@@ -121,7 +121,8 @@ class ReinforcementAgent(ValueEstimationAgent):
           state. This is what you should use to
           obtain legal actions for a state
         """
-        return self.actionFn(state)
+        #return self.actionFn(state)
+        return state.getLegalActions(self.index)
 
     def observeTransition(self, state,action,nextState,deltaReward):
         """
