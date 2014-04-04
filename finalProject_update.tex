@@ -96,8 +96,11 @@ We have created a model of the game in Python. The model will be able to play tw
 
 \section{Current Work}
 
-At this time, we have completed a working Stratego game, as well as an agent that takes human input so that we can play the game, and an agent that makes random moves, so that we have something to compare our learning agent to. 
-\\
+At this time, we have completed a working Stratego game, as well as several non-learning agents. The game is text-based, using a grid system based off of the provided grid-world code from Project 3, and tracks the position and rank of every piece on the board. To preserve the unknowns in the game, when agent asks the system for the state, the system only gives it the location of the opponents pieces and not the identities.
+
+We have also written a couple different agents. We have a random agent, that randomly picks a legal action to play. We have a human agent, that queries the user for a piece to move and a location to lose it to. The agent then checks that the move is legal. We have started writing a reinforcement learning agent, but have not tested it yet.
+
+A difficulty we face at the moment is setting up the game. When playing Stratego, a large portion of the game is choosing where to place each piece before starting the game. So far, we have an algorithm for generating random setups, but we are not sure how to set up reinforcement learning on the setup. \\
 
 \section{Metrics of Success}
 We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.
