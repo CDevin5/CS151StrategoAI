@@ -1,5 +1,10 @@
 from piece import *
 
+WALL      = '%'
+EMPTY     = ' '
+ENEMY     = '?'
+MOVED     = 'M'
+MOVED_FAR = 'X'
 
 class GameState:
     def __init__(self, layout, agent0setup, agent1setup, agent0dead=[], agent1dead=[]):
@@ -17,8 +22,8 @@ class GameState:
 
         for x in range(width):
             for y in range(height):
-                self.walls = self.layout.walls
-                self.state[x][y] = self._wallStr(self.walls[x][y])
+                walls = self.layout.walls
+                self.state[x][y] = self._wallStr(walls[x][y])
                 self.pieces[x][y] = None
 
         for piece in self.player0pieces_alive:
@@ -31,14 +36,15 @@ class GameState:
             self.state[x][y] = str(piece)
             self.pieces[x][y] = piece
 
-    def _wallStr(self, hasWall):
+    @staticmethod
+    def _wallStr(hasWall):
         if hasWall:
-            return '%'
+            return WALL
         else:
-            return ' '
+            return EMPTY
 
-    def __str__(self):
-        return str(self.state)
+    def prnt(self, agent):
+        print self.getState(agent)
 
     def getAlivePieces(self, agent):
         if agent == 0:
@@ -69,15 +75,15 @@ class GameState:
 
     def isFreeAtPos(self, position):
         x, y = position
-        if self.pieces[x][y] == None:
-            return True
-        else:
+        if self.pieces[x][y] is not None or self.state[x][y] == WALL:
             return False
+        else:
+            return True
 
     def isEnemyAtPos(self, position, agent):
         x, y = position
         piece = self.pieces[x][y]
-        if piece == None:
+        if piece is None:
             return False
         else:
             return piece.agentIndex != agent
@@ -85,7 +91,7 @@ class GameState:
     def isInBounds(self, position):
         x, y = position
 
-        if x > 7 or x < 0 or y > 7 or y < 0:
+        if x > 8 or x < 1 or y > 8 or y < 1:
             return False
         else:
             return True
@@ -110,7 +116,26 @@ class GameState:
                          self.player1pieces_dead)
 
     def getState(self, agent):
-        return self.state
+        state = self.copy().state
+        if agent == 0:
+            for piece in self.player1pieces_alive:
+                (x,y) = piece.position
+                val = ENEMY
+                if piece.moved:
+                    val = MOVED
+                if piece.movedFar:
+                    val = MOVED_FAR
+                state[x][y] = val
+        else:
+            for piece in self.player0pieces_alive:
+                (x,y) = piece.position
+                val = ENEMY
+                if piece.moved:
+                    val = MOVED
+                if piece.movedFar:
+                    val = MOVED_FAR
+                state[x][y] = val
+        return state
 
     def getSuccessor(self, agent, action):
         successor = self.copy()
@@ -132,7 +157,7 @@ class GameState:
                 successor.killPiece(enemy, 1-agent)
 
         piece.position = newPos
-        successor.state[oldx][oldy] = successor._wallStr(self.walls[oldx][oldy])
+        successor.state[oldx][oldy] = EMPTY
         successor.pieces[oldx][oldy] = None
 
         successor.state[x][y] = str(piece)
@@ -146,7 +171,7 @@ class GameState:
             self.player0pieces_alive.remove(piece)
 
             x, y = piece.position
-            self.state[x][y] = self._wallStr(self.walls[x][y])
+            self.state[x][y] = EMPTY
             self.pieces[x][y] = None
 
         else:
@@ -154,7 +179,7 @@ class GameState:
             self.player1pieces_alive.remove(piece)
 
             x, y = piece.position
-            self.state[x][y] = self._wallStr(self.walls[x][y])
+            self.state[x][y] = EMPTY
             self.pieces[x][y] = None
 
     def getLegalActions(self, agent):
@@ -172,13 +197,13 @@ class GameState:
 
     def isWon(self, agent):
         if agent == 0:
-            if self.getFlag(1) == None:
+            if self.getFlag(1) is None:
                 return True
             else:
                 return self.getLegalActions(1) == []
 
         else:
-            if self.getFlag(0) == None:
+            if self.getFlag(0) is None:
                 return True
             else:
                 return self.getLegalActions(0) == []
@@ -199,7 +224,7 @@ class Grid:
 
         self.width = width
         self.height = height
-        self.data = [[initialValue for y in range(height)] for x in range(width)]
+        self.data = [[initialValue for _ in range(height)] for _ in range(width)]
         if bitRepresentation:
             self._unpackBits(bitRepresentation)
 
@@ -212,10 +237,16 @@ class Grid:
     def __str__(self):
         out = [[str(self.data[x][y])[0] for x in range(self.width)] for y in range(self.height)]
         out.reverse()
-        return '\n'.join([''.join(x) for x in out])
+
+        cols = '\n  ' + ''.join([str(x) for x in range(self.width)])
+        rows = range(self.height)
+        rows.reverse()
+        out = [[str(n),' '] + text for n,text in zip(rows,out)]
+
+        return '\n'.join([''.join(x) for x in out]) + cols
 
     def __eq__(self, other):
-        if other == None: return False
+        if other is None: return False
         return self.data == other.data
 
     def __hash__(self):
@@ -246,11 +277,11 @@ class Grid:
         return sum([x.count(item) for x in self.data])
 
     def asList(self, key=True):
-        list = []
+        l = []
         for x in range(self.width):
             for y in range(self.height):
-                if self[x][y] == key: list.append((x, y))
-        return list
+                if self[x][y] == key: l.append((x, y))
+        return l
 
     def packBits(self):
         """

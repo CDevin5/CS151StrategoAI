@@ -32,7 +32,7 @@ class Game:
             print "ACTION:", (str(piece), piece.position, pos)
 
             self.state = self.state.getSuccessor(agentIndex, action)
-            print self.state
+            self.state.prnt(agent.index)
 
             if self.state.isWon(0):
                 print "Player 0 wins!"
