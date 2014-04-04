@@ -159,7 +159,7 @@ class ApproximateQAgent(QLearningAgent):
         startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
         pieces = []
         for i in len(startingRanks):
-            pieces += [piece.Piece(startingRanks[i], startingSpots[i], self.index)]
+            pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
         return pieces
 
 

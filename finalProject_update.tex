@@ -114,10 +114,20 @@ Regardless of whether the AI we write can meet these goals, we will learn how we
 \\
 
 \section{Feasibility}
-The goal of our project is feasible, as we have found an online Stratego game at {\texttt stratego.com} that allows you to play against a computer player as well as other human players. The computer player was reasonably good at the game, and was able to win against us. There are also some other Stratego games online that feature computer players. Therefore, it is possible to make a Stratego-playing artificial intelligence. 
-%Since our agent will have incomplete information about the state of the world, we know that this is a problem we can use a partially observable Markov decision process model, as described in the paper {\it Reinforcement learning for problems with Hidden State} by Hasinoff.
+We believe our project is feasible because, although the game of Stratego is complex and has hidden information, we are approaching the project in a fairly straightforward way. To get enough training time, we will train the agent against itself, a technique that worked very well for TD-Gammon\ref{TD-Gammon}. As none of us are particularly skilled Stratego players, it should be possible for the agent to learn to play better than us and better than the random agent. Our stretch goal of having the agent play against (and beat) good players online will be harder, and it’s feasibility will be easier to determine once we have started training the agent. The AI agent on {\texttt stratego.com} reasonably good at the game, and was able to win against us. 
 \\
 
+
+\section{Future Work}
+The main things we need to work on next are 
+\begin{enumerate}
+\item write the feature extractor
+\item test the Q-learning agent
+\item figure out how to to make Q-learning 
+\item set up the system to have 2 agents learning at once
+\end{enumerate}
+Getting these things done will allow us to mostly finish the project. Additional tasks to 
+do could involve creating a non-learning look ahead agent to train against or putting the agent online to have students play against it.
 
 \section{References}
 Hasinoff, S. W. 2003. ``Reinforcement Learning for problems with Hidden State''. Department of Computer Science, University of Toronto.\\
