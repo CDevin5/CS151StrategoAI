@@ -185,7 +185,7 @@ class ApproximateQAgent(QLearningAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        features = self.featExtractor.getFeatures(state, action)#.values()
+        features = self.featExtractor.getFeatures(state, self.index)#.values()
         #weights = self.weights.values()
         #dotProduct = reduce( (lambda x, y: x*y), map( (lambda x, y: x+y), self.weights, features))
         #return dotProduct

@@ -28,7 +28,7 @@ class FeatureExtractors:
         flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]
         surrpieces = [state.getPieceAtPos(p) for p in surroundings]
-        feats["flagsurrounded"] = sum([1 if (p != None and p.agent == me) else 0 for p in surrpieces])
+        feats["flagsurrounded"] = sum([1 if (p != None and p.agentIndex == me) else 0 for p in surrpieces])
 
         # Maybe add the row of the general or the bomb diffusers
 
