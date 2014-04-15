@@ -19,6 +19,10 @@ class Agent:
         """
         raiseNotDefined()
 
+    def final(self, state):
+        # Do nothing
+        return
+
 class RandomAgent(Agent):
     """
     An agent that picks a random action.

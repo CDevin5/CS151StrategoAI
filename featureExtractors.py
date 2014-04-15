@@ -33,7 +33,9 @@ class FeatureExtractors:
         # Maybe add the row of the general or the bomb diffusers
 
         return feats
-
+    def getListOfFeatures(self):
+        return ["mynumpieces", "yournumpieces", "mypiecesum", "yourpiecesum", "numbombdiffusers", "numbombs", 
+                "distflagenemy", "mysumofpiecesrows", "yousumofpiecesrows", "flagsurrounded"]
 
 def manhattanDistance(p1, p2):
     (x1,y1) = p1.position

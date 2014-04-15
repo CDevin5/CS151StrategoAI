@@ -40,6 +40,7 @@ class Game:
             if self.state.isWon(1):
                 print "Player 1 wins!"
                 break
+            agent.final(self.state)
 
             agentIndex = 1-agentIndex
         print "The game took", turns, "turns."
@@ -49,7 +50,7 @@ def main():
     agent1 = ApproximateQAgent(1)
     #agent1 = RandomAgent(1)
     game = Game([agent0, agent1], 0)
-
+    agent1.startEpisode()
     game.run()
 
 if __name__ == "__main__": main()
