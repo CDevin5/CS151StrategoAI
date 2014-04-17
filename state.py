@@ -82,6 +82,8 @@ class GameState:
 
     def isEnemyAtPos(self, position, agent):
         x, y = position
+        if not self.isInBounds(position):
+            return False
         piece = self.pieces[x][y]
         if piece is None:
             return False
@@ -146,15 +148,16 @@ class GameState:
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = self.getPieceAtPos(newPos)
-            result = piece.attack(enemy)
+            if enemy != None:
+                result = piece.attack(enemy)
 
-            if result == LOSE_FIGHT:
-                successor.killPiece(piece, agent)
-            if result == WIN_FIGHT:
-                successor.killPiece(enemy, 1-agent)
-            if result == TIE_FIGHT:
-                successor.killPiece(piece, agent)
-                successor.killPiece(enemy, 1-agent)
+                if result == LOSE_FIGHT:
+                    successor.killPiece(piece, agent)
+                if result == WIN_FIGHT:
+                    successor.killPiece(enemy, 1-agent)
+                if result == TIE_FIGHT:
+                    successor.killPiece(piece, agent)
+                    successor.killPiece(enemy, 1-agent)
 
         piece.position = newPos
         successor.state[oldx][oldy] = EMPTY
