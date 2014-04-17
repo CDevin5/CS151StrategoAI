@@ -116,7 +116,7 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        print "update"
+      #  print "update"
         oldValue = self.getQValue(state, action)
         sample = reward + self.discount*self.computeValueFromQValues(nextState)
         self.qValues[(state, action)] = (1-self.alpha)*oldValue + self.alpha*(sample)
@@ -136,14 +136,14 @@ class ApproximateQAgent(QLearningAgent):
        and update.  All other QLearningAgent functions
        should work as is.
     """
-    def __init__(self, index, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1):
+    def __init__(self, index, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=0.5):
         self.featExtractor = FeatureExtractors()
         self.weights = util.Counter()
         featsList = self.featExtractor.getListOfFeatures()
-        for f in featsList:
-            self.weights[f] = random.random()
+        # for f in featsList:
+        #     self.weights[f] = random.random()
         self.index = index
-        QLearningAgent.__init__(self, numTraining=100, epsilon=0.5, alpha=0.5, gamma=1)
+        QLearningAgent.__init__(self, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=1)
 
     def makeSetup(self):
         """ Returns a list of pieces"""
@@ -152,7 +152,7 @@ class ApproximateQAgent(QLearningAgent):
         pieces = []
         for i in range(len(startingRanks)):
             pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
-        print [(str(p), p.position) for p in pieces]
+     #   print [(str(p), p.position) for p in pieces]
         return pieces
 
     def getStartSpots(self):
@@ -189,7 +189,7 @@ class ApproximateQAgent(QLearningAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        print "getQValue"
+       # print "getQValue"
         features = self.featExtractor.getFeatures(state, self.index)#.values()
         #weights = self.weights.values()
         #dotProduct = reduce( (lambda x, y: x*y), map( (lambda x, y: x+y), self.weights, features))
@@ -207,28 +207,29 @@ class ApproximateQAgent(QLearningAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        print "compValFromState"
-        actions = self.getLegalActions(state)
-        if len(actions) == 0:
-            return 0.0
-        values = [self.getQValue(state, action) for action in actions]
-        return max(values)
+      #  print "compValFromState"
+        #actions = self.getLegalActions(state)
+        # if len(actions) == 0:
+        #     return 0.0
+        # values = [self.getQValue() for action in actions]
+        return self.getQValue(state, None)
+
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
-        print "Update"
+       # print "Update"
         difference = (reward + self.discount*self.compValFromState(nextState)) - self.getQValue(state, action)
         features = self.featExtractor.getFeatures(state, self.index)
         #print "features", features, "difference", difference, "weights", self.weights
         for key in self.weights:
-            self.weights[key] += self.alpha * difference * features[key]
-        print "NEW WEIGHTS", self.weights      
+            self.weights[key] = self.alpha * difference * features[key]
+       # print "NEW WEIGHTS", self.weights      
 
     def final(self, state):
         "Called at the end of each game."
-        print "FINAL"
+       # print "FINAL"
         # call the super-class final method
         QLearningAgent.final(self, state)
 
@@ -239,7 +240,9 @@ class ApproximateQAgent(QLearningAgent):
             pass
     def getScore(self, state):
         if state.isWon(self.index):
-            return 1
-        return 0
-
+            return 10
+        elif state.isWon(1-self.index):
+            return -10
+        else:
+          return -1
 

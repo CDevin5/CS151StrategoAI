@@ -330,3 +330,4 @@ class Grid:
             else:
                 bools.append(False)
         return bools
+
