@@ -1,6 +1,8 @@
 import random
 import state
 from piece import *
+from featureExtractors import *
+import util
 
 class Agent:
     """
@@ -23,23 +25,6 @@ class Agent:
         # Do nothing
         return
 
-class RandomAgent(Agent):
-    """
-    An agent that picks a random action.
-    """
-    def getAction(self, state):
-        actions = state.getLegalActions(self.index)
-        return random.choice(actions)
-    def makeSetup(self):
-        """ Returns a list of pieces"""
-        startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
-        startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
-        pieces = []
-        for i in range(len(startingRanks)):
-            pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
-       # print [(str(p), p.position) for p in pieces]
-        return pieces
-
     def getStartSpots(self):
         """ Generates a list of the positions available for initial setup """
         spots = []
@@ -53,6 +38,25 @@ class RandomAgent(Agent):
             for col in range(1,9):
                 spots += [(col, row)]
         return spots
+
+    def makeSetup(self):
+        """ Returns a list of pieces"""
+        startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
+        startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
+        pieces = []
+        for i in range(len(startingRanks)):
+            pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
+       # print [(str(p), p.position) for p in pieces]
+        return pieces
+
+class RandomAgent(Agent):
+    """
+    An agent that picks a random action.
+    """
+    def getAction(self, state):
+        actions = state.getLegalActions(self.index)
+        return random.choice(actions)
+    
 
 class HumanAgent(Agent):
     """
@@ -106,7 +110,7 @@ class HumanAgent(Agent):
                 spots += [(col, row)]
         return spots
 
-class ApproximateQAgent(QLearningAgent):
+class ApproximateQAgent(Agent):
     """
        ApproximateQLearningAgent
 
@@ -114,12 +118,35 @@ class ApproximateQAgent(QLearningAgent):
        and update.  All other QLearningAgent functions
        should work as is.
     """
-    def __init__(self, index, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=0.5):
+    def __init__(self, index, epsilon=0.5, alpha=0.5, gamma=0.5):
         self.featExtractor = FeatureExtractors()
         self.weights = util.Counter()
         featsList = self.featExtractor.getListOfFeatures()
         # for f in featsList:
         #     self.weights[f] = random.random()
         self.index = index
-        QLearningAgent.__init__(self, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=1)
+        self.exploreRate = epsilon
+        self.learningRate = alpha
+        self.discount = gamma
 
+    def getAction(self, state):
+        legalActions = state.getLegalActions(self.index)
+
+        # Maybe Explore:
+        r = random.random()
+        if (r < self.exploreRate):
+            return random.choice(legalActions)
+
+        # Exploit:
+        return max((self.getValue(state.getSuccessor(self.index, a)), a) for a in legalActions)[1]
+
+    def getValue(self, state):
+        """
+          Should return V(state) = w * featureVector
+          where * is the dotProduct operator
+        """ 
+        features = self.featExtractor.getFeatures(state, self.index)#.values()
+        score = 0
+        for key in features.keys():
+            score += features[key]*self.weights[key]
+        return score

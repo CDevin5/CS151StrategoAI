@@ -1,4 +1,5 @@
 from piece import *
+import copy
 
 WALL      = '%'
 EMPTY     = ' '
@@ -114,8 +115,12 @@ class GameState:
         return neighbors
 
     def copy(self):
-        return GameState(self.layout, self.player0pieces_alive, self.player1pieces_alive, self.player0pieces_dead,
-                         self.player1pieces_dead)
+        newplayer0pieces_alive = copy.deepcopy(self.player0pieces_alive)
+        newplayer1pieces_alive = copy.deepcopy(self.player1pieces_alive)
+        newplayer0pieces_dead = copy.deepcopy(self.player0pieces_dead)
+        newplayer1pieces_dead = copy.deepcopy(self.player1pieces_dead)
+        return GameState(self.layout, newplayer0pieces_alive, newplayer1pieces_alive, newplayer0pieces_dead,
+                         newplayer1pieces_dead)
 
     def getState(self, agent):
         state = self.copy().state
@@ -142,12 +147,13 @@ class GameState:
     def getSuccessor(self, agent, action):
         successor = self.copy()
 
-        piece, newPos = action
+        pieceIndex, newPos = action
+        piece = successor.getAlivePieces(agent)[pieceIndex]
         oldx, oldy = piece.position
         x, y = newPos
 
         if successor.isEnemyAtPos(newPos, agent):
-            enemy = self.getPieceAtPos(newPos)
+            enemy = successor.getPieceAtPos(newPos)
             if enemy != None:
                 result = piece.attack(enemy)
 
@@ -187,14 +193,14 @@ class GameState:
 
     def getLegalActions(self, agent):
         actions = []
-
-        for piece in self.getAlivePieces(agent):
-            if piece.canMove:
-                neighborPos = self.getNeighborPositions(piece)
+        pieces = self.getAlivePieces(agent)
+        for i in range(len(pieces)):
+            if pieces[i].canMove:
+                neighborPos = self.getNeighborPositions(pieces[i])
 
                 for pos in neighborPos:
                     if self.isFreeAtPos(pos) or self.isEnemyAtPos(pos, agent):
-                        actions.append((piece, pos))
+                        actions.append((i, pos))
 
         return actions
 

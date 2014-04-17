@@ -1,6 +1,5 @@
 from state import *
 from Agent import *
-from qlearningAgents import *
 from layout import getLayout
 
 class Game:
@@ -24,20 +23,16 @@ class Game:
             turns += 1
             agent = self.agents[agentIndex]
 
-            if 'observationFunction' in dir( agent ):
-                observation = agent.observationFunction(self.state.copy())
-            else:
-                observation = self.state.copy()
            # print '\n'
            # print "AGENT", agent.index, "'s TURN"
            # print "--------------\n"
 
-            action = agent.getAction(observation)
+            action = agent.getAction(self.state)
             (piece, pos) = action
           #  print "ACTION:", (str(piece), piece.position, pos)
 
             self.state = self.state.getSuccessor(agentIndex, action)
-            #self.state.prnt(agent.index)
+            self.state.prnt(agent.index)
 
             if self.state.isWon(0):
                 print "Player 0 wins!"
@@ -56,10 +51,9 @@ def main():
     #agent1 = RandomAgent(1)
 
     game = Game([agent0, agent1], 0)
-    agent1.startEpisode()
     
     wi = agent1.weights
-    for i in range(100):
+    for i in range(4):
         game.run()
         print "Weights after game", i, " are", agent1.weights
     print "Initial weights", wi
