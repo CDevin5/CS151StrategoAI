@@ -106,3 +106,20 @@ class HumanAgent(Agent):
                 spots += [(col, row)]
         return spots
 
+class ApproximateQAgent(QLearningAgent):
+    """
+       ApproximateQLearningAgent
+
+       You should only have to overwrite getQValue
+       and update.  All other QLearningAgent functions
+       should work as is.
+    """
+    def __init__(self, index, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=0.5):
+        self.featExtractor = FeatureExtractors()
+        self.weights = util.Counter()
+        featsList = self.featExtractor.getListOfFeatures()
+        # for f in featsList:
+        #     self.weights[f] = random.random()
+        self.index = index
+        QLearningAgent.__init__(self, numTraining=10000, epsilon=0.5, alpha=0.5, gamma=1)
+
