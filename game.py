@@ -48,8 +48,8 @@ def main():
     agent0 = RandomAgent(0)
     agent1 = ApproximateQAgent(1)
     #agent1 = RandomAgent(1)
-    game = Game([agent0, agent1], 0)
 
+    game = Game([agent0, agent1], 0)
     game.run()
 
 if __name__ == "__main__": main()
