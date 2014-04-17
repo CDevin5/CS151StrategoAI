@@ -37,7 +37,7 @@ class RandomAgent(Agent):
         pieces = []
         for i in range(len(startingRanks)):
             pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
-        print [(str(p), p.position) for p in pieces]
+       # print [(str(p), p.position) for p in pieces]
         return pieces
 
     def getStartSpots(self):
