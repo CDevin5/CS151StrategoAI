@@ -49,6 +49,9 @@ class Agent:
        # print [(str(p), p.position) for p in pieces]
         return pieces
 
+    def update(self, state, action, nextState):
+        return
+
 class RandomAgent(Agent):
     """
     An agent that picks a random action.
@@ -118,12 +121,12 @@ class ApproximateQAgent(Agent):
        and update.  All other QLearningAgent functions
        should work as is.
     """
-    def __init__(self, index, epsilon=0.5, alpha=0.5, gamma=0.5):
+    def __init__(self, index, epsilon=0.5, alpha=0.5, gamma= 1):
         self.featExtractor = FeatureExtractors()
         self.weights = util.Counter()
         featsList = self.featExtractor.getListOfFeatures()
         # for f in featsList:
-        #     self.weights[f] = random.random()
+        #     self.weights[f] = 0#random.random()
         self.index = index
         self.exploreRate = epsilon
         self.learningRate = alpha
@@ -131,14 +134,15 @@ class ApproximateQAgent(Agent):
 
     def getAction(self, state):
         legalActions = state.getLegalActions(self.index)
-
+        if legalActions == []:
+            return None
         # Maybe Explore:
         r = random.random()
         if (r < self.exploreRate):
             return random.choice(legalActions)
 
         # Exploit:
-        return max((self.getValue(state.getSuccessor(self.index, a)), a) for a in legalActions)[1]
+        return max((self.getQValue(state, a), a) for a in legalActions)[1]
 
     def getValue(self, state):
         """
@@ -150,3 +154,31 @@ class ApproximateQAgent(Agent):
         for key in features.keys():
             score += features[key]*self.weights[key]
         return score
+
+    def getQValue(self, state, action):
+        if action == None:
+            return self.getReward(state)
+        return self.getValue(state.getSuccessor(self.index, action))
+
+    def update(self, state, action, nextState):
+        """
+           Should update your weights based on transition
+        """
+        reward = self.getReward(nextState)
+        difference = (reward + self.discount*self.getQValue(nextState, self.getAction(nextState))) - self.getQValue(state, action)
+        features = self.featExtractor.getFeatures(state, self.index)
+        for key in self.weights:
+            divisor = max(abs(self.weights[key]), abs(self.weights[key]+1))
+            self.weights[key] += (self.learningRate * difference * features[key])#+(1-self.learningRate)*self.weights[key])/(divisor)
+        maxVal = max(abs(v) for v in self.weights.values())
+        if maxVal != 0:
+            self.weights.divideAll(maxVal)
+        
+
+    def getReward(self, nextState):
+        if nextState.isWon(self.index):
+            return 1
+        elif nextState.isWon(1-self.index):
+            return -1
+        else:
+          return 0

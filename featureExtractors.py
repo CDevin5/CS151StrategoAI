@@ -10,25 +10,25 @@ class FeatureExtractors:
         flag = state.getFlag(me)
         feats = Counter()
 
-        feats["mynumpieces"] = len(state.getAlivePieces(me))
-        feats["yournumpieces"] = len(state.getAlivePieces(you))
+        feats["mynumpieces"] = len(state.getAlivePieces(me))/10.0
+        feats["yournumpieces"] = len(state.getAlivePieces(you))/10.0
 
-        feats["mypiecesum"] = sum([p.rank for p in state.getAlivePieces(me)])
-        feats["yourpiecesum"] = 52 - sum([11-p.rank for p in state.getDeadPieces(you)])
+        feats["mypiecesum"] = sum([p.rank for p in state.getAlivePieces(me)])/52.0
+        feats["yourpiecesum"] = (52 - sum([11-p.rank for p in state.getDeadPieces(you)]))/52.0
 
-        feats["numbombdiffusers"] = sum([1 if p.rank == piece.MINER else 0 for p in state.getAlivePieces(me)])
+        feats["numbombdiffusers"] = sum([1 if p.rank == piece.MINER else 0 for p in state.getAlivePieces(me)])/3.0
 
-        feats["numbombs"] = sum([1 if p.rank == piece.BOMB else 0 for p in state.getAlivePieces(me)])
+        feats["numbombs"] = sum([1 if p.rank == piece.BOMB else 0 for p in state.getAlivePieces(me)])/3.0
 
-        feats["distflagenemy"] = max([manhattanDistance(flag, p) for p in state.getAlivePieces(you)])
+        feats["distflagenemy"] = max([manhattanDistance(flag, p) for p in state.getAlivePieces(you)])/15.0
 
-        feats["mysumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(me)])
-        feats["yousumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(you)])
+        feats["mysumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(me)])/80.0
+        feats["yoursumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(you)])/80.0
 
         flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]
         surrpieces = [state.getPieceAtPos(p) for p in surroundings]
-        feats["flagsurrounded"] = sum([1 if (p != None and p.agentIndex == me) else 0 for p in surrpieces])
+        feats["flagsurrounded"] = sum([1 if (p != None and p.agentIndex == me) else 0 for p in surrpieces])/4.0
 
         # Maybe add the row of the general or the bomb diffusers
 
