@@ -174,6 +174,59 @@ class GameState:
 
         return successor
 
+    def getSuccessorsPrbs(self, agent, action):
+        
+        successor = self.copy()
+
+        pieceIndex, newPos = action
+        piece = successor.getAlivePieces(agent)[pieceIndex]
+        oldx, oldy = piece.position
+        x, y = newPos
+
+        piece.position = newPos
+        successor.state[oldx][oldy] = EMPTY
+        successor.pieces[oldx][oldy] = None
+
+        successor.state[x][y] = str(piece)
+        successor.pieces[x][y] = piece
+
+        successors = [(successor, 1.0)]
+
+        if successor.isEnemyAtPos(newPos, agent):
+            enemy = successor.getPieceAtPos(newPos)
+
+            if enemy != None:
+                successors = []
+                #result = piece.attack(enemy)
+                enemies = getAlivePieces(1-agent)
+                numWins = 0
+                numLosses = 0
+                numTies = 0
+                for e in enemies:
+                    result = piece.attack(e)
+
+                    if result == LOSE_FIGHT:
+                        numLosses += 1
+                    if result == WIN_FIGHT:
+                        numWins += 1
+                    if result == TIE_FIGHT:
+                        numTies += 1
+
+                successorWin = successor.copy()
+                successorLose = successor.copy()
+                successorTie = successor.copy()
+
+                successorWin.killPiece(enemy)
+                successorLose.killPiece(piece)
+                successorTie.killPiece(enemy)
+                successorTie.killPiece(piece)
+
+                total = float(numWins+numTies+numLosses)
+                successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total)]
+
+
+        return successors
+
     def killPiece(self, piece, agent):
         if agent == 0:
             self.player0pieces_dead.append(piece)

@@ -158,7 +158,8 @@ class ApproximateQAgent(Agent):
     def getQValue(self, state, action):
         if action == None:
             return self.getReward(state)
-        return self.getValue(state.getSuccessor(self.index, action))
+        stateProbs = state.getSuccessorsProbs(self.index, action)
+        return sum(self.getValue(s)*p for (s, p) in stateProbs)
 
     def update(self, state, action, nextState):
         """

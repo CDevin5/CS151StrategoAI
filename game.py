@@ -69,7 +69,7 @@ def main():
     wi = agent1.weights.copy()
     for i in range(100):
         game.run()
-        if (i%10 == 0):
+        if (i%1 == 0):
             print "Weights after game", i, " are", agent1.weights
             print "Player 0 won", game.agent0wins, "times"
             print "Player 1 won", game.agent1wins, "times"
