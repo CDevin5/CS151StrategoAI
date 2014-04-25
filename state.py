@@ -1,5 +1,6 @@
 from piece import *
 import copy
+import util
 
 WALL      = '%'
 EMPTY     = ' '
@@ -124,24 +125,15 @@ class GameState:
 
     def getState(self, agent):
         state = self.copy().state
-        if agent == 0:
-            for piece in self.player1pieces_alive:
-                (x,y) = piece.position
-                val = ENEMY
-                if piece.moved:
-                    val = MOVED
-                if piece.movedFar:
-                    val = MOVED_FAR
-                state[x][y] = val
-        else:
-            for piece in self.player0pieces_alive:
-                (x,y) = piece.position
-                val = ENEMY
-                if piece.moved:
-                    val = MOVED
-                if piece.movedFar:
-                    val = MOVED_FAR
-                state[x][y] = val
+        pieces = self.player1pieces_alive if agent == 0 else self.player0pieces_alive
+        for piece in pieces:
+            (x,y) = piece.position
+            val = ENEMY
+            if piece.moved:
+                val = MOVED
+            if piece.movedFar:
+                val = MOVED_FAR
+            state[x][y] = val
         return state
 
     def getSuccessor(self, agent, action):
@@ -151,6 +143,10 @@ class GameState:
         piece = successor.getAlivePieces(agent)[pieceIndex]
         oldx, oldy = piece.position
         x, y = newPos
+
+        piece.moved = True
+        if util.manhattanDistance(piece.position, newPos) > 1:
+            piece.movedFar = True
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
@@ -248,13 +244,31 @@ class GameState:
         actions = []
         pieces = self.getAlivePieces(agent)
         for i in range(len(pieces)):
-            if pieces[i].canMove:
-                neighborPos = self.getNeighborPositions(pieces[i])
-
-                for pos in neighborPos:
-                    if self.isFreeAtPos(pos) or self.isEnemyAtPos(pos, agent):
+            piece = pieces[i]
+            if piece.rank == SCOUT:
+                x,y = piece.position
+                scoutRanges = [range(x-1,-1,-1), range(x+1,self.layout.width), range(y-1,-1,-1), range(y+1, self.layout.height)]
+                for scoutRange in scoutRanges:
+                    for j in range(len(scoutRange)):
+                        if j <= 1:
+                            pos = (scoutRange[j],y)
+                        else:
+                            pos = (x, scoutRange[j])
+                        if self.isEnemyAtPos(pos, agent):
+                            actions.append((i, pos))
+                            break
+                        if not self.isFreeAtPos(pos):
+                            break
                         actions.append((i, pos))
+            else:
+                if piece.canMove:
+                    neighborPos = self.getNeighborPositions(piece)
 
+                    for pos in neighborPos:
+                        if self.isFreeAtPos(pos) or self.isEnemyAtPos(pos, agent):
+                            actions.append((i, pos))
+
+        print "Legal actions:", [(pieces[p].rank, pos) for (p,pos) in actions]
         return actions
 
     def isWon(self, agent):
