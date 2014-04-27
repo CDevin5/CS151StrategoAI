@@ -181,7 +181,7 @@ class GameState:
 
         piece.moved = True
         if util.manhattanDistance(piece.position, newPos) > 1:
-            piece.movedFar = True
+            piece.knownRank = SCOUT
 
         piece.position = newPos
         successor.state[oldx][oldy] = EMPTY
@@ -194,20 +194,19 @@ class GameState:
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
-            if enemy != None and enemy.movedFar:
+            enemy.knownRank = enemy.rank
+            if enemy is not None and enemy.knownRank is not None:
                 result = piece.attack(enemy)
                 if result == LOSE_FIGHT:
-                    successor.killPiece(piece)
+                    successor.killPiece(piece, agent)
                 if result == WIN_FIGHT:
-                    successor.killPiece(enemy)
+                    successor.killPiece(enemy, 1-agent)
                 if result == TIE_FIGHT:
-                    successor.killPiece(enemy)
-                    successor.killPiece(piece)
+                    successor.killPiece(enemy, 1-agent)
+                    successor.killPiece(piece, agent)
 
             elif enemy != None:
-                successors = []
-                #result = piece.attack(enemy)
-                enemies = getAlivePieces(1-agent)
+                enemies = self.getAlivePieces(1-agent)
                 numWins = 0
                 numLosses = 0
                 numTies = 0
@@ -225,10 +224,10 @@ class GameState:
                 successorLose = successor.copy()
                 successorTie = successor.copy()
 
-                successorWin.killPiece(enemy)
-                successorLose.killPiece(piece)
-                successorTie.killPiece(enemy)
-                successorTie.killPiece(piece)
+                successorWin.killPiece(enemy, 1-agent)
+                successorLose.killPiece(piece, agent)
+                successorTie.killPiece(enemy, 1-agent)
+                successorTie.killPiece(piece, agent)
 
                 total = float(numWins+numTies+numLosses)
                 successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total)]

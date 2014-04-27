@@ -28,8 +28,9 @@ class Piece:
         self.rank = rank
         self.position = position
         self.agentIndex = agentIndex
+
         self.moved = False
-        self.movedFar = False
+        self.knownRank = None
 
         self.canMove = True
 
