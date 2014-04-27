@@ -170,7 +170,7 @@ class GameState:
 
         return successor
 
-    def getSuccessorsPrbs(self, agent, action):
+    def getSuccessorsProbs(self, agent, action):
         
         successor = self.copy()
 
@@ -178,6 +178,10 @@ class GameState:
         piece = successor.getAlivePieces(agent)[pieceIndex]
         oldx, oldy = piece.position
         x, y = newPos
+
+        piece.moved = True
+        if util.manhattanDistance(piece.position, newPos) > 1:
+            piece.movedFar = True
 
         piece.position = newPos
         successor.state[oldx][oldy] = EMPTY
@@ -190,8 +194,17 @@ class GameState:
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
+            if enemy != None and enemy.movedFar:
+                result = piece.attack(enemy)
+                if result == LOSE_FIGHT:
+                    successor.killPiece(piece)
+                if result == WIN_FIGHT:
+                    successor.killPiece(enemy)
+                if result == TIE_FIGHT:
+                    successor.killPiece(enemy)
+                    successor.killPiece(piece)
 
-            if enemy != None:
+            elif enemy != None:
                 successors = []
                 #result = piece.attack(enemy)
                 enemies = getAlivePieces(1-agent)
@@ -268,7 +281,7 @@ class GameState:
                         if self.isFreeAtPos(pos) or self.isEnemyAtPos(pos, agent):
                             actions.append((i, pos))
 
-        print "Legal actions:", [(pieces[p].rank, pos) for (p,pos) in actions]
+        #print "Legal actions:", [(pieces[p].rank, pos) for (p,pos) in actions]
         return actions
 
     def isWon(self, agent):

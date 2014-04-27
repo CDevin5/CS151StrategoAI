@@ -121,7 +121,7 @@ class ApproximateQAgent(Agent):
        and update.  All other QLearningAgent functions
        should work as is.
     """
-    def __init__(self, index, epsilon=0.5, alpha=0.5, gamma= 1):
+    def __init__(self, index, epsilon=0.5, alpha=0.5, gamma= 0.999):
         self.featExtractor = FeatureExtractors()
         self.weights = util.Counter()
         featsList = self.featExtractor.getListOfFeatures()

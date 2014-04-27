@@ -2,6 +2,10 @@ from state import *
 from Agent import *
 from layout import getLayout
 
+BOARD = False
+SCORE = True
+WEIGHTS = True
+
 class Game:
     def __init__(self, agents, startAgentIndex):
         self.agents = agents
@@ -11,6 +15,8 @@ class Game:
 
         self.agent0wins = 0
         self.agent1wins = 0
+
+        self.num2000turns = 0
 
 
     def run(self):
@@ -24,7 +30,7 @@ class Game:
         turns = 0
 
         # weights after 5100 games.
-        newdict = {'mysumofpiecesrows': 0.4074917633967522, 'yourpiecesum': 0.2139136270049274, 'numbombdiffusers': 0.3198096780820665, 'numbombs': -0.01758883640141232, 'flagsurrounded': -0.02395574694873867, 'yournumpieces': -0.01078281998170093, 'mynumpieces': 0.5385217847461586, 'distflagenemy': 1.0, 'mypiecesum': 0.5631366846940973, 'yoursumofpiecesrows': -0.03561273951110605}
+        newdict = {'mysumofpiecesrows': -0.4074917633967522, 'yourpiecesum': 0.2139136270049274, 'numbombdiffusers': 0.3198096780820665, 'numbombs': -0.01758883640141232, 'flagsurrounded': -0.02395574694873867, 'yournumpieces': -0.01078281998170093, 'mynumpieces': 0.5385217847461586, 'distflagenemy': 1.0, 'mypiecesum': 0.5631366846940973, 'yoursumofpiecesrows': -0.03561273951110605}
         for key, value in newdict.iteritems():
             self.agents[1].weights[key] =value
 
@@ -41,38 +47,50 @@ class Game:
           #  print "ACTION:", (str(piece), piece.position, pos)
 
             nextState = self.state.getSuccessor(agentIndex, action)
-           # agent.update(self.state, action, nextState)
+            agent.update(self.state, action, nextState)
             self.state = nextState
 
-            #self.state.prnt(agent.index)
+            if BOARD and agentIndex == 1:
+                self.state.prnt(agent.index)
 
             if self.state.isWon(0):
                 #print "Player 0 wins!"
                 self.agent0wins += 1
+                print "Turns", turns
                 break
             if self.state.isWon(1):
                 #print "Player 1 wins!"
                 self.agent1wins += 1
+                print "Turns", turns
                 break
            # agent.final(self.state)
+
+            if turns > 2000:
+                print "Turns", turns
+                self.num2000turns += 1
+                break
 
             agentIndex = 1-agentIndex
         #print "The game took", turns, "turns."
 
 def main():
-    agent0 = RandomAgent(0)
-    agent1 = ApproximateQAgent(1, epsilon=0)
+    agent0 = ApproximateQAgent(0)
+    agent1 = ApproximateQAgent(1)
     #agent1 = RandomAgent(1)
 
     game = Game([agent0, agent1], 0)
     
     wi = agent1.weights.copy()
-    for i in range(100):
+    for i in range(1000):
         game.run()
         if (i%1 == 0):
-            print "Weights after game", i, " are", agent1.weights
-            print "Player 0 won", game.agent0wins, "times"
-            print "Player 1 won", game.agent1wins, "times"
+            if WEIGHTS:
+                print "Agent 0 Weights after game", i, " are", agent0.weights
+                print "Agent 1 Weights after game", i, " are", agent1.weights
+            if SCORE:
+                print "Player 0 won", game.agent0wins, "times"
+                print "Player 1 won", game.agent1wins, "times"
+                print "Num 2000 turns", game.num2000turns
             print 
     print "Initial weights", wi
     print "Final weights", agent1.weights
