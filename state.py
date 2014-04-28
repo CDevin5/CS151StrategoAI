@@ -131,8 +131,8 @@ class GameState:
             val = ENEMY
             if piece.moved:
                 val = MOVED
-            if piece.movedFar:
-                val = MOVED_FAR
+            #if piece.movedFar:
+            #    val = MOVED_FAR
             state[x][y] = val
         return state
 
@@ -217,14 +217,15 @@ class GameState:
                 numLosses = 0
                 numTies = 0
                 for e in enemies:
-                    result = piece.attack(e)
+                    if not (enemy.hasMoved and (e == BOMB or e == FLAG)):
+                        result = piece.attack(e)
 
-                    if result == LOSE_FIGHT:
-                        numLosses += 1
-                    if result == WIN_FIGHT:
-                        numWins += 1
-                    if result == TIE_FIGHT:
-                        numTies += 1
+                        if result == LOSE_FIGHT:
+                            numLosses += 1
+                        if result == WIN_FIGHT:
+                            numWins += 1
+                        if result == TIE_FIGHT:
+                            numTies += 1
 
                 successorWin = successor.copy()
                 successorLose = successor.copy()
