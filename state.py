@@ -206,6 +206,7 @@ class GameState:
                 numWins = 0
                 numLosses = 0
                 numTies = 0
+                takeFlag = 0
                 for e in enemies:
                     if not (enemy.hasMoved and (e == BOMB or e == FLAG)):
                         result = piece.attack(e)
@@ -216,6 +217,8 @@ class GameState:
                             numWins += 1
                         if result == TIE_FIGHT:
                             numTies += 1
+                        if result == TAKE_FLAG
+                            takeFlag += 1
 
                 successorWin = successor.copy()
                 successorLose = successor.copy()
@@ -226,8 +229,11 @@ class GameState:
                 successorTie.killPiece(enemy, 1-agent)
                 successorTie.killPiece(piece, agent)
 
-                total = float(numWins+numTies+numLosses)
-                successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total)]
+                successorFlag.killPiece(enemy, agent)
+
+                total = float(numWins+numTies+numLosses+takeFlag)
+                successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total)
+                              (successorFlag, takeFlag/total)]
 
 
         return successors
