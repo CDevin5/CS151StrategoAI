@@ -1,0 +1,30 @@
+- Fix random setup
+- Need getQValue to take into account probability of win/loss of battle. -> Mostly good
+- Make a presentation
+- Make tables of stats
+- Screencast?
+- Train against itself
+- Play a game against it
+- Add in remembering an enemy after seeing it. 
+
+Q Agent vs Random (no learning)
+Final weights {'mysumofpiecesrows': 0, 'yourpiecesum': 0, 'numbombdiffusers': 0, 'numbombs': 0, 'flagsurrounded': 0, 'yournumpieces': 0, 'mynumpieces': 0, 'distflagenemy': 0, 'mypiecesum': 0, 'yoursumofpiecesrows': 0}
+Player 0 won 333 times Random
+Player 1 won 535 times Q Agent
+Num 2000 turns 132
+
+Q Agent vs. Random (learning)
+Final weights {'mysumofpiecesrows': 0.14304587420030987, 'yourpiecesum': -1.0, 'numbombdiffusers': 0.8938795583712001, 'numbombs': 0.6811353507526687, 'flagsurrounded': -0.012575587571356493, 'yournumpieces': -0.8660935280072104, 'mynumpieces': 0.3083832947121093, 'distflagenemy': -0.6397444402906379, 'mypiecesum': -0.1441279138977027, 'yoursumofpiecesrows': -0.2959174092410362}
+Player 0 won 563 times
+Player 1 won 345 times
+Num 2000 turns 92
+
+-> Continued another 1000 games starting with the above weights:
+Final weights {'mysumofpiecesrows': 0.03513988390360605, 'yourpiecesum': -1.0, 'numbombdiffusers': 0.7180310307185394, 'numbombs': 0.5272635675593819, 'flagsurrounded': -0.012513712847765595, 'yournumpieces': -0.8475237035193617, 'mynumpieces': 0.17497789779703374, 'distflagenemy': -0.6637231203153648, 'mypiecesum': -0.2267032554252376, 'yoursumofpiecesrows': -0.2903112564848997}
+Player 0 won 219 times
+Player 1 won 491 times
+Num 2000 turns 290
+
+Q Agent vs. Q Agent
+
+
