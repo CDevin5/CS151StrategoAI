@@ -14,7 +14,7 @@ class FeatureExtractors:
         feats["yournumpieces"] = len(state.getAlivePieces(you))/10.0
 
         feats["mypiecesum"] = sum([p.rank for p in state.getAlivePieces(me)])/52.0
-        feats["yourpiecesum"] = (52 - sum([11-p.rank for p in state.getDeadPieces(you)]))/52.0
+        feats["yourpiecesum"] = sum([p.rank for p in state.getAlivePieces(you)])/52.0
 
         feats["numbombdiffusers"] = sum([1 if p.rank == piece.MINER else 0 for p in state.getAlivePieces(me)])/3.0
 
@@ -24,6 +24,9 @@ class FeatureExtractors:
 
         feats["mysumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(me)])/80.0
         feats["yoursumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(you)])/80.0
+
+        feats["iwon"] = state.isWon(me)
+        feats["youwon"] = state.isWon(you)
 
         flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]

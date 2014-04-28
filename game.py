@@ -1,6 +1,7 @@
 from state import *
 from Agent import *
 from layout import getLayout
+import time
 
 BOARD = False
 SCORE = True
@@ -38,7 +39,7 @@ class Game:
         # weights after 2000 games
         newdict = {'mysumofpiecesrows': 0.03513988390360605, 'yourpiecesum': -1.0, 'numbombdiffusers': 0.7180310307185394, 'numbombs': 0.5272635675593819, 'flagsurrounded': -0.012513712847765595, 'yournumpieces': -0.8475237035193617, 'mynumpieces': 0.17497789779703374, 'distflagenemy': -0.6637231203153648, 'mypiecesum': -0.2267032554252376, 'yoursumofpiecesrows': -0.2903112564848997}
         for key, value in newdict.iteritems():
-            self.agents[1].weights[key] =value
+            self.agents[0].weights[key] = value
 
         while not self.gameOver:
             turns += 1
@@ -57,7 +58,7 @@ class Game:
                 agent.update(self.state, action, nextState)
             self.state = nextState
 
-            if BOARD and agentIndex == 1:
+            if BOARD and agentIndex == 0:
                 self.state.prnt(agent.index)
 
             if self.state.isWon(0):
@@ -78,29 +79,30 @@ class Game:
                 break
 
             agentIndex = 1-agentIndex
+            if BOARD: time.sleep(0.02)
         #print "The game took", turns, "turns."
 
 def main():
-    agent0 = RandomAgent(0)
-    agent1 = ApproximateQAgent(1, epsilon=0)
-    #agent1 = RandomAgent(1)
+    agent0 = ApproximateQAgent(0, epsilon=0.5, alpha=0.2)
+    agent1 = RandomAgent(1)
 
     game = Game([agent0, agent1], 0)
     
-    wi = agent1.weights.copy()
+    wi = agent0.weights.copy()
     for i in range(1000):
         game.run()
         if (i%1 == 0):
             if WEIGHTS:
-                #print "Agent 0 Weights after game", i, " are", agent0.weights
-                print "Agent 1 Weights after game", i, " are", agent1.weights
+                print "Agent 0 Weights after game", i, " are", agent0.weights
+                # print "Agent 1 Weights after game", i, " are", agent1.weights
             if SCORE:
                 print "Player 0 won", game.agent0wins, "times"
                 print "Player 1 won", game.agent1wins, "times"
                 print "Num 2000 turns", game.num2000turns
-            print 
+            print
+        if BOARD: time.sleep(5)
     print "Initial weights", wi
-    print "Final weights", agent1.weights
+    print "Final weights", agent0.weights
     print "Player 0 won", game.agent0wins, "times"
     print "Player 1 won", game.agent1wins, "times"
 

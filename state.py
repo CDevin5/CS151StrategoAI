@@ -129,10 +129,8 @@ class GameState:
         for piece in pieces:
             (x,y) = piece.position
             val = ENEMY
-            if piece.moved:
-                val = MOVED
-            #if piece.movedFar:
-            #    val = MOVED_FAR
+            # if piece.moved:
+            #     val = MOVED
             state[x][y] = val
         return state
 
@@ -146,7 +144,6 @@ class GameState:
 
         piece.moved = True
         if util.manhattanDistance(piece.position, newPos) > 1:
-            piece.movedFar = True
             piece.knownRank = True
 
         if successor.isEnemyAtPos(newPos, agent):
@@ -183,10 +180,6 @@ class GameState:
 
         piece.moved = True
 
-        # This should happen in the actual getSuccessor
-        #if util.manhattanDistance(piece.position, newPos) > 1:
-        #    piece.knownRank = SCOUT
-
         piece.position = newPos
         successor.state[oldx][oldy] = EMPTY
         successor.pieces[oldx][oldy] = None
@@ -198,9 +191,6 @@ class GameState:
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
-            # This should NOT happen in getSuccessorsProbs because getSuccessorsProbs is not allowed to know 
-            # the enemies rank.
-            # enemy.knownRank = enemy.rank
             if enemy is not None and enemy.knownRank is not None:
                 result = piece.attack(enemy)
                 if result == LOSE_FIGHT:
