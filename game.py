@@ -70,8 +70,8 @@ class Game:
                 agent.update(self.state, action, nextState)
             self.state = nextState
 
-            if BOARD and agentIndex == 0:
-                self.state.prnt(agent.index)
+            if BOARD:
+                self.state.prnt(0)
 
             
 
