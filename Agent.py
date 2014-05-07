@@ -151,7 +151,7 @@ class ApproximateQAgent(Agent):
           Should return V(state) = w * featureVector
           where * is the dotProduct operator
         """ 
-        features = self.featExtractor.getFeatures(state, self.index)#.values()
+        features = self.featExtractor.getFeatures(state, self.index)
         score = 0
         for key in features.keys():
             score += features[key]*self.weights[key]
@@ -204,24 +204,25 @@ class ApproximateQAgent(Agent):
             return random.choice(legalPlacements)
 
         # Exploit:
-        return max((self.getSetupQValue(state, a), a) for a in legalPlacements)[1]
+        return max((self.getSetupQValue(piecesPlaced), a) for a in legalPlacements)[1]
 
-    def getSetupQValue():
-        features = self.setupFeatExtractor.getFeatures(state, self.index)#.values()
+    def getSetupValue(pieces):
+        features = self.setupFeatExtractor.getFeatures(pieces)
         score = 0
         for key in features.keys():
             score += features[key]*self.weights[key]
         return score
 
-    def getSetupValue():
+    def getSetupQValue(pieces):
+
+        return self.getSetupValue(pieces)
 
     def makeSetup(self):
         """ Returns a list of pieces"""
         piecesPlaced = []
         startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
-        # startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
-        # pieces = []
-        # for i in range(len(startingRanks)):
-        #     pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
-        # print [(str(p), p.position) for p in pieces]
-        # return pieces
+        
+        for rank in startingRanks:
+            piecesPlaced.append(Piece(rank, getLocation(rank, piecesPlaced)), self.index)
+
+        return piecesPlaced
