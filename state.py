@@ -147,6 +147,7 @@ class GameState:
             piece.knownRank = True
 
         if successor.isEnemyAtPos(newPos, agent):
+            # print "SUCCESSOR ENEMY AT POS (FOR REALSIES)"
             enemy = successor.getPieceAtPos(newPos)
             if enemy != None:
                 result = piece.attack(enemy)
@@ -155,22 +156,25 @@ class GameState:
                     successor.killPiece(piece, agent)
                 if result == WIN_FIGHT:
                     successor.killPiece(enemy, 1-agent)
+                    successor.state[x][y] = str(piece)
+                    successor.pieces[x][y] = piece
                 if result == TIE_FIGHT:
                     successor.killPiece(piece, agent)
                     successor.killPiece(enemy, 1-agent)
             enemy.knownRank = enemy.rank
+        else:
+            successor.state[x][y] = str(piece)
+            successor.pieces[x][y] = piece
 
         piece.position = newPos
         successor.state[oldx][oldy] = EMPTY
         successor.pieces[oldx][oldy] = None
 
-        successor.state[x][y] = str(piece)
-        successor.pieces[x][y] = piece
-
         return successor
 
     def getSuccessorsProbs(self, agent, action):
-        
+        # print "Get successor probs"
+        # print "Action:", action
         successor = self.copy()
 
         pieceIndex, newPos = action
@@ -180,18 +184,13 @@ class GameState:
 
         piece.moved = True
 
-        piece.position = newPos
-        successor.state[oldx][oldy] = EMPTY
-        successor.pieces[oldx][oldy] = None
-
-        successor.state[x][y] = str(piece)
-        successor.pieces[x][y] = piece
-
         successors = [(successor, 1.0)]
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
-            if enemy is not None and enemy.knownRank is not None:
+            # if enemy is not None and
+            if enemy.knownRank is not None:
+                # print "we know the enemy rank"
                 result = piece.attack(enemy)
                 if result == LOSE_FIGHT:
                     successor.killPiece(piece, agent)
@@ -201,14 +200,22 @@ class GameState:
                     successor.killPiece(enemy, 1-agent)
                     successor.killPiece(piece, agent)
 
-            elif enemy is not None:
-                enemies = self.getAlivePieces(1-agent)
+            # elif enemy is not None:
+            else:
+                # print "we don't know the enemy rank"
+                enemies = successor.getAlivePieces(1-agent)
+                numMoved = sum(1 if p.moved else 0 for p in enemies)
+                numCanMove = sum(0 if p.rank == BOMB or p.rank == FLAG else 1 for p in enemies)
+                if numCanMove == numMoved:
+                    enemies = [e for e in enemies if e.rank == BOMB or e.rank == FLAG]
+
                 numWins = 0
                 numLosses = 0
                 numTies = 0
                 takeFlag = 0
+
                 for e in enemies:
-                    if not (enemy.hasMoved and (e == BOMB or e == FLAG)):
+                    if not (enemy.moved and (e.rank == BOMB or e.rank == FLAG)):
                         result = piece.attack(e)
 
                         if result == LOSE_FIGHT:
@@ -223,18 +230,26 @@ class GameState:
                 successorWin = successor.copy()
                 successorLose = successor.copy()
                 successorTie = successor.copy()
+                successorFlag = successor.copy()
 
-                successorWin.killPiece(enemy, 1-agent)
-                successorLose.killPiece(piece, agent)
-                successorTie.killPiece(enemy, 1-agent)
-                successorTie.killPiece(piece, agent)
+                successorWin.killPiece(successorWin.getPieceAtPos(newPos), 1-agent)
+                successorLose.killPiece(successorLose.getAlivePieces(agent)[pieceIndex], agent)
+                successorTie.killPiece(successorTie.getPieceAtPos(newPos), 1-agent)
+                successorTie.killPiece(successorTie.getAlivePieces(agent)[pieceIndex], agent)
+                successorFlag.killPiece(successorFlag.getPieceAtPos(newPos), 1-agent)
 
-                successorFlag.killPiece(enemy, agent)
+                successorWin.state[x][y] = str(piece)
+                successorWin.pieces[x][y] = piece
 
                 total = float(numWins+numTies+numLosses+takeFlag)
-                successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total)
+                if total == 0: total = 1
+                successors = [(successorWin, numWins/total), (successorLose, numLosses/total), (successorTie, numTies/total),
                               (successorFlag, takeFlag/total)]
-
+        piece.position = newPos
+        successor.state[oldx][oldy] = EMPTY
+        successor.pieces[oldx][oldy] = None
+        successor.state[x][y] = str(piece)
+        successor.pieces[x][y] = piece
 
         return successors
 
@@ -263,12 +278,12 @@ class GameState:
             if piece.rank == SCOUT:
                 x,y = piece.position
                 scoutRanges = [range(x-1,-1,-1), range(x+1,self.layout.width), range(y-1,-1,-1), range(y+1, self.layout.height)]
-                for scoutRange in scoutRanges:
-                    for j in range(len(scoutRange)):
+                for j in range(4):
+                    for xy in scoutRanges[j]:
                         if j <= 1:
-                            pos = (scoutRange[j],y)
+                            pos = (xy,y)
                         else:
-                            pos = (x, scoutRange[j])
+                            pos = (x,xy)
                         if self.isEnemyAtPos(pos, agent):
                             actions.append((i, pos))
                             break
@@ -283,7 +298,7 @@ class GameState:
                         if self.isFreeAtPos(pos) or self.isEnemyAtPos(pos, agent):
                             actions.append((i, pos))
 
-        #print "Legal actions:", [(pieces[p].rank, pos) for (p,pos) in actions]
+        # print "Legal actions:", [(pieces[p].rank, pieces[p].position, pos) for (p,pos) in actions]
         return actions
 
     def isWon(self, agent):

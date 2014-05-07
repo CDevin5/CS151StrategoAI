@@ -3,8 +3,8 @@ from Agent import *
 from layout import getLayout
 import time
 
-BOARD = True
-SCORE = False
+BOARD = False
+SCORE = True
 WEIGHTS = False
 LEARN = True
 
@@ -90,9 +90,9 @@ def main():
     #newdict = {'mysumofpiecesrows': 0.14304587420030987, 'yourpiecesum': -1.0, 'numbombdiffusers': 0.8938795583712001, 'numbombs': 0.6811353507526687, 'flagsurrounded': -0.012575587571356493, 'yournumpieces': -0.8660935280072104, 'mynumpieces': 0.3083832947121093, 'distflagenemy': -0.6397444402906379, 'mypiecesum': -0.1441279138977027, 'yoursumofpiecesrows': -0.2959174092410362}
     # weights after 2000 games
     # newdict = {'mysumofpiecesrows': 0.03513988390360605, 'yourpiecesum': -1.0, 'numbombdiffusers': 0.7180310307185394, 'numbombs': 0.5272635675593819, 'flagsurrounded': -0.012513712847765595, 'yournumpieces': -0.8475237035193617, 'mynumpieces': 0.17497789779703374, 'distflagenemy': -0.6637231203153648, 'mypiecesum': -0.2267032554252376, 'yoursumofpiecesrows': -0.2903112564848997}
-    newdict = {'numbombs': -0.7475761386392166, 'yourpiecesum': -0.19471197711879412, 'numbombdiffusers': 0.2210793823655118, 'mysumofpiecesrows': -0.028286315814823174, 'iwon': 4.86422826341377e-05, 'flagsurrounded': -0.05793042061015382, 'yournumpieces': -0.7539541122967902, 'mynumpieces': 1.0, 'distflagenemy': -0.18757118464717795, 'mypiecesum': -0.2128251588143957, 'yoursumofpiecesrows': -0.5720138911234868, 'youwon': -4.86422826341377e-05}
-    for key, value in newdict.iteritems():
-        game.agents[0].weights[key] = value
+    # newdict = {'numbombs': -0.7475761386392166, 'yourpiecesum': -0.19471197711879412, 'numbombdiffusers': 0.2210793823655118, 'mysumofpiecesrows': -0.028286315814823174, 'iwon': 4.86422826341377e-05, 'flagsurrounded': -0.05793042061015382, 'yournumpieces': -0.7539541122967902, 'mynumpieces': 1.0, 'distflagenemy': -0.18757118464717795, 'mypiecesum': -0.2128251588143957, 'yoursumofpiecesrows': -0.5720138911234868, 'youwon': -4.86422826341377e-05}
+    # for key, value in newdict.iteritems():
+    #     game.agents[0].weights[key] = value
 
     wi = agent0.weights.copy()
     print "Initial weights", wi

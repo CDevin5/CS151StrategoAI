@@ -169,7 +169,7 @@ class ApproximateQAgent(Agent):
         difference = (reward + self.discount*self.getQValue(nextState, self.getAction(nextState))) - self.getQValue(state, action)
         features = self.featExtractor.getFeatures(state, self.index)
         for key in self.weights:
-            divisor = max(abs(self.weights[key]), abs(self.weights[key]+1))
+            # divisor = max(abs(self.weights[key]), abs(self.weights[key]+1))
             self.weights[key] += (self.learningRate * difference * features[key])#+(1-self.learningRate)*self.weights[key])/(divisor)
         maxVal = max(abs(v) for v in self.weights.values())
         if maxVal != 0:
