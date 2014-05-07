@@ -188,7 +188,7 @@ class GameState:
                 result = piece.attack(enemy)
                 if result == LOSE_FIGHT:
                     successor.killPiece(piece, agent)
-                if result == WIN_FIGHT:
+                if result == WIN_FIGHT or result == TAKE_FLAG:
                     successor.killPiece(enemy, 1-agent)
                 if result == TIE_FIGHT:
                     successor.killPiece(enemy, 1-agent)
