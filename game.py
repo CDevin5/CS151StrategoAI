@@ -33,7 +33,7 @@ class Game:
         turns = 0
 
         if SETUP:
-            self.state.prnt(0)
+            self.state.prnt()
 
         while not self.gameOver:
 
