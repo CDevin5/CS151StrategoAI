@@ -123,7 +123,9 @@ class ApproximateQAgent(Agent):
     """
     def __init__(self, index, epsilon=0.5, alpha=0.5, gamma= 0.999):
         self.featExtractor = FeatureExtractors()
+        self.setupFeatExtractor = SetupFeatures()
         self.weights = util.Counter()
+        self.setupWeights = util.Counter()
         featsList = self.featExtractor.getListOfFeatures()
         # for f in featsList:
         #     self.weights[f] = 0#random.random()
@@ -175,7 +177,6 @@ class ApproximateQAgent(Agent):
         if maxVal != 0:
             self.weights.divideAll(maxVal)
         
-
     def getReward(self, nextState):
         if nextState.isWon(self.index):
             return 1
@@ -183,3 +184,44 @@ class ApproximateQAgent(Agent):
             return -1
         else:
           return -0.001
+
+    def getLegalPlacements(self, pieces):
+        spots = self.getStartSpots()
+        legalPlacements = []
+
+        for p in pieces:
+            if p.position not in spots:
+                legalPlacements.append(p.position)
+        return legalPlacements
+
+    def getLocation(self, rank, piecesPlaced):
+        legalPlacements = self.getLegalPlacements(piecesPlaced)
+        if legalPlacements == []:
+            return None
+        # Maybe Explore:
+        r = random.random()
+        if (r < self.exploreRate):
+            return random.choice(legalPlacements)
+
+        # Exploit:
+        return max((self.getSetupQValue(state, a), a) for a in legalPlacements)[1]
+
+    def getSetupQValue():
+        features = self.setupFeatExtractor.getFeatures(state, self.index)#.values()
+        score = 0
+        for key in features.keys():
+            score += features[key]*self.weights[key]
+        return score
+
+    def getSetupValue():
+
+    def makeSetup(self):
+        """ Returns a list of pieces"""
+        piecesPlaced = []
+        startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
+        # startingSpots = random.sample(self.getStartSpots(), len(startingRanks))
+        # pieces = []
+        # for i in range(len(startingRanks)):
+        #     pieces += [Piece(startingRanks[i], startingSpots[i], self.index)]
+        # print [(str(p), p.position) for p in pieces]
+        # return pieces
