@@ -147,20 +147,18 @@ class GameState:
             piece.knownRank = True
 
         if successor.isEnemyAtPos(newPos, agent):
-            # print "SUCCESSOR ENEMY AT POS (FOR REALSIES)"
             enemy = successor.getPieceAtPos(newPos)
-            if enemy != None:
-                result = piece.attack(enemy)
+            result = piece.attack(enemy)
 
-                if result == LOSE_FIGHT:
-                    successor.killPiece(piece, agent)
-                if result == WIN_FIGHT:
-                    successor.killPiece(enemy, 1-agent)
-                    successor.state[x][y] = str(piece)
-                    successor.pieces[x][y] = piece
-                if result == TIE_FIGHT:
-                    successor.killPiece(piece, agent)
-                    successor.killPiece(enemy, 1-agent)
+            if result == LOSE_FIGHT:
+                successor.killPiece(piece, agent)
+            if result == WIN_FIGHT or result == TAKE_FLAG:
+                successor.killPiece(enemy, 1-agent)
+                successor.state[x][y] = str(piece)
+                successor.pieces[x][y] = piece
+            if result == TIE_FIGHT:
+                successor.killPiece(piece, agent)
+                successor.killPiece(enemy, 1-agent)
             enemy.knownRank = enemy.rank
         else:
             successor.state[x][y] = str(piece)
@@ -173,8 +171,6 @@ class GameState:
         return successor
 
     def getSuccessorsProbs(self, agent, action):
-        # print "Get successor probs"
-        # print "Action:", action
         successor = self.copy()
 
         pieceIndex, newPos = action
@@ -188,9 +184,7 @@ class GameState:
 
         if successor.isEnemyAtPos(newPos, agent):
             enemy = successor.getPieceAtPos(newPos)
-            # if enemy is not None and
             if enemy.knownRank is not None:
-                # print "we know the enemy rank"
                 result = piece.attack(enemy)
                 if result == LOSE_FIGHT:
                     successor.killPiece(piece, agent)
@@ -200,9 +194,7 @@ class GameState:
                     successor.killPiece(enemy, 1-agent)
                     successor.killPiece(piece, agent)
 
-            # elif enemy is not None:
             else:
-                # print "we don't know the enemy rank"
                 enemies = successor.getAlivePieces(1-agent)
                 numMoved = sum(1 if p.moved else 0 for p in enemies)
                 numCanMove = sum(0 if p.rank == BOMB or p.rank == FLAG else 1 for p in enemies)
