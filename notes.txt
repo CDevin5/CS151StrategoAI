@@ -25,6 +25,13 @@ Player 0 won 219 times
 Player 1 won 491 times
 Num 2000 turns 290
 
+Fresh Q Agent vs. Random (alpha = 0.2, kwon you won features, 5000 runs):
+Initial weights {'youwon': -0.9, 'iwon': 0.9}
+Final weights {'numbombs': -0.7475761386392166, 'yourpiecesum': -0.19471197711879412, 'numbombdiffusers': 0.2210793823655118, 'mysumofpiecesrows': -0.028286315814823174, 'iwon': 4.86422826341377e-05, 'flagsurrounded': -0.05793042061015382, 'yournumpieces': -0.7539541122967902, 'mynumpieces': 1.0, 'distflagenemy': -0.18757118464717795, 'mypiecesum': -0.2128251588143957, 'yoursumofpiecesrows': -0.5720138911234868, 'youwon': -4.86422826341377e-05}
+Player 0 won 2618 times (Q agent)
+Player 1 won 1100 times (Random)
+Num 2000 turns 1282
+
 Q Agent vs. Q Agent
 
 

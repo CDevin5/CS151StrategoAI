@@ -217,7 +217,7 @@ class GameState:
                             numWins += 1
                         if result == TIE_FIGHT:
                             numTies += 1
-                        if result == TAKE_FLAG
+                        if result == TAKE_FLAG:
                             takeFlag += 1
 
                 successorWin = successor.copy()
