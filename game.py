@@ -6,6 +6,7 @@ import time
 BOARD = False
 SCORE = True
 WEIGHTS = False
+SETUP = True
 LEARN = True
 
 class Game:
@@ -76,6 +77,8 @@ class Game:
             agentIndex = 1-agentIndex
             if BOARD: time.sleep(0.02)
         #print "The game took", turns, "turns."
+        self.agents[0].final(self.state)
+        self.agents[1].final(self.state)
 
 def main():
     agent0 = ApproximateQAgent(0, epsilon=0.5, alpha=0.2)
@@ -102,6 +105,8 @@ def main():
             if WEIGHTS:
                 print "Agent 0 Weights after game", i, " are", agent0.weights
                 # print "Agent 1 Weights after game", i, " are", agent1.weights
+            if SETUP:
+                print "Agent 0 Setup Weights after game", i, " are", agent0.setupWeights, "\n"
             if SCORE:
                 print "Player 0 won", game.agent0wins, "times"
                 print "Player 1 won", game.agent1wins, "times"

@@ -40,6 +40,21 @@ class FeatureExtractors:
         return ["mynumpieces", "yournumpieces", "mypiecesum", "yourpiecesum", "numbombdiffusers", "numbombs", 
                 "distflagenemy", "mysumofpiecesrows", "yousumofpiecesrows", "flagsurrounded"]
 
+class SetupFeatures:
+    def getFeatures(self, pieces):
+        feats = Counter()
+
+        for i in range(len(pieces)):
+            p = pieces[i]
+            feats[str(i) + "x" + str(p.position[0])] =1
+            feats[str(i) + "y" + str(p.position[1])] =1
+            
+            for j in range(i):
+                feats["dist"+str(i)+str(j)] = manhattanDistance(p, pieces[j])
+
+        return feats
+
+
 def manhattanDistance(p1, p2):
     (x1,y1) = p1.position
     (x2,y2) = p2.position
