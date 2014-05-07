@@ -6,7 +6,7 @@ import time
 BOARD = False
 SCORE = True
 WEIGHTS = False
-SETUP = True
+SETUP = False
 LEARN = True
 
 class Game:
