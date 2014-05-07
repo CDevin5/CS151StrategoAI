@@ -3,6 +3,7 @@ import state
 from piece import *
 from featureExtractors import *
 import util
+import copy
 
 class Agent:
     """
@@ -50,6 +51,9 @@ class Agent:
         return pieces
 
     def update(self, state, action, nextState):
+        return
+
+    def final(self, state):
         return
 
 class RandomAgent(Agent):
@@ -176,22 +180,30 @@ class ApproximateQAgent(Agent):
         maxVal = max(abs(v) for v in self.weights.values())
         if maxVal != 0:
             self.weights.divideAll(maxVal)
+
+    def updateSetupWeights(self, reward):
+        difference = reward - self.getSetupValue(self.finalSetup)
+        features = self.setupFeatExtractor.getFeatures(self.finalSetup)
+        for key in self.setupWeights:
+            divisor = max(abs(self.setupWeights[key]), abs(self.setupWeights[key]+1))
+            self.setupWeights[key] += (self.learningRate * difference * features[key])#+(1-self.learningRate)*self.weights[key])/(divisor)
+        maxVal = max(abs(v) for v in self.setupWeights.values())
+        if maxVal != 0:
+            self.setupWeights.divideAll(maxVal)
         
     def getReward(self, nextState):
         if nextState.isWon(self.index):
-            return 1
+            return 2
         elif nextState.isWon(1-self.index):
             return -1
         else:
           return -0.001
 
     def getLegalPlacements(self, pieces):
-        spots = self.getStartSpots()
-        legalPlacements = []
+        legalPlacements = self.getStartSpots()
 
         for p in pieces:
-            if p.position not in spots:
-                legalPlacements.append(p.position)
+            legalPlacements.remove(p.position)
         return legalPlacements
 
     def getLocation(self, rank, piecesPlaced):
@@ -204,25 +216,38 @@ class ApproximateQAgent(Agent):
             return random.choice(legalPlacements)
 
         # Exploit:
-        return max((self.getSetupQValue(piecesPlaced), a) for a in legalPlacements)[1]
+        return max((self.getSetupQValue(piecesPlaced, (pos, rank)), pos) for pos in legalPlacements)[1]
 
-    def getSetupValue(pieces):
+    def getSetupValue(self, pieces):
         features = self.setupFeatExtractor.getFeatures(pieces)
         score = 0
         for key in features.keys():
-            score += features[key]*self.weights[key]
+           # print key, "value:", features[key], "weight", sel
+            score += features[key]*self.setupWeights[key]
         return score
 
-    def getSetupQValue(pieces):
-
-        return self.getSetupValue(pieces)
+    def getSetupQValue(self, pieces, action):
+        (pos, rank) = action
+        newPiece = Piece(rank, pos, self.index)
+        piecesCopy = copy.deepcopy(pieces)
+        piecesCopy.append(newPiece)
+        return self.getSetupValue(piecesCopy)
 
     def makeSetup(self):
         """ Returns a list of pieces"""
         piecesPlaced = []
-        startingRanks = [FLAG, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL, BOMB, BOMB]
+        startingRanks = [FLAG, BOMB, BOMB, SPY, SCOUT, SCOUT, MINER, MINER, GENERAL, MARSHALL]
         
         for rank in startingRanks:
-            piecesPlaced.append(Piece(rank, getLocation(rank, piecesPlaced)), self.index)
+            piecesPlaced.append(Piece(rank, self.getLocation(rank, piecesPlaced), self.index))
+
+        self.finalSetup = piecesPlaced
 
         return piecesPlaced
+
+    def final(self, state):
+        if state.isWon(self.index):
+            self.updateSetupWeights(1)
+        else:
+            self.updateSetupWeights(-1)
+

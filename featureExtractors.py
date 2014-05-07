@@ -28,7 +28,7 @@ class FeatureExtractors:
         feats["iwon"] = state.isWon(me)
         feats["youwon"] = state.isWon(you)
 
-        flagx, flagy = flaposition
+        flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]
         surrpieces = [state.getPieceAtPos(p) for p in surroundings]
         feats["flagsurrounded"] = sum([1 if (p != None and p.agentIndex == me) else 0 for p in surrpieces])/4.0
@@ -46,11 +46,13 @@ class SetupFeatures:
 
         for i in range(len(pieces)):
             p = pieces[i]
-            feats[str(i) + "x" + p.position[0]] =1
-            feats[str(i) + "y" + p.position[1]] =1
+            feats[str(i) + "x" + str(p.position[0])] =1
+            feats[str(i) + "y" + str(p.position[1])] =1
             
             for j in range(i):
                 feats["dist"+str(i)+str(j)] = manhattanDistance(p, pieces[j])
+
+        return feats
 
 
 def manhattanDistance(p1, p2):
