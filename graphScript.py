@@ -15,3 +15,6 @@ while line != '':
         total = won+lost+timedout
         o.write("%d\t\t%f\n"%(total, won/total))
     line = i.readline()
+
+i.close()
+o.close()
