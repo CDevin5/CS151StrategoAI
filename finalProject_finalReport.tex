@@ -98,7 +98,7 @@ We used reinforcement learning to create our AI. Because the state space of Stra
 These features should accurately capture the important aspects of a given state, and give our agent a way to approximately 
 evaluate the game states that it is in.\\
 
-We have created a model of the game in Python. The model is able to play two AIs against each other, or play an AI against a human opponent. We trained our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
+We have created a model of the game in Python. The model is able to play any two agents against each other, such as two AIs against each other, or play an AI against a human opponent. We trained our agent by running it against both an agent that always moves randomly, and another instance of the same learning agent, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
 
 One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
 Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
@@ -107,10 +107,10 @@ pieces it has lost to in an attack. \\
 As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
 or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
 
-In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. The features that we used for this part of the game were
+In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. Each agent places one piece at a time, and uses features based on the pieces that it has previously placed to decide where to place the next piece. The features that we used for this part of the game were:
 \begin{itemize}
-\item The $x$ and $y$ position of each piece.
-\item The distance between each pair of pieces.
+\item The $x$ and $y$ position of each piece that has already been placed on the board.
+\item The distance between each pair of pieces that are already on the board.
 \end{itemize}
 
 The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
