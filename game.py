@@ -3,11 +3,11 @@ from Agent import *
 from layout import getLayout
 import time
 
-BOARD = True
+BOARD = False
 SCORE = True
-WEIGHTS = False
-SETUP = False
-LEARN = False
+WEIGHTS = True
+SETUP = True
+LEARN = True
 
 class Game:
     def __init__(self, agents, startAgentIndex):
@@ -33,7 +33,7 @@ class Game:
         turns = 0
 
         if SETUP:
-            self.state.prnt()
+            self.state.prnt(0)
 
         while not self.gameOver:
 
@@ -83,8 +83,8 @@ class Game:
             self.agents[1].final(self.state)
 
 def main():
-    agent0 = ApproximateQAgent(0, epsilon=0.5, alpha=0.2)
-    agent1 = RandomAgent(1)
+    agent0 = ApproximateQAgent(0, epsilon=0.2, alpha=0.2)
+    agent1 = ApproximateQAgent(1, epsilon=0.2, alpha=0.2)
 
     game = Game([agent0, agent1], 0)
 
