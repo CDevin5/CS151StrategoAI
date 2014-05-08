@@ -2,14 +2,15 @@ from state import *
 from Agent import *
 from layout import getLayout
 import time
+import argparse
 
 BOARD = False
 SCORE = True
 WEIGHTS = True
 SETUP = False
 
-TRAINING_GAMES = 2000
-REAL_GAMES = 1000
+TRAINING_GAMES = 2#000
+REAL_GAMES = 1#000
 
 class Game:
     def __init__(self, agents, startAgentIndex):
@@ -75,8 +76,22 @@ class Game:
         return turns
 
 def main():
-    agent0 = ApproximateQAgent(0, epsilon=0.5, alpha=0.2)
-    agent1 = RandomAgent(1)
+
+    parser = argparse.ArgumentParser(description='Process inputs.')
+    parser.add_argument('--vs', dest='vs_agent', choices=['QAgent', 'Random'])
+    parser.add_argument('-a', dest='alpha', type=float)
+    parser.add_argument('-e', dest='epsilon', type=float)
+    parser.add_argument('--tfile', dest='tfile', default="trainingOutput.txt")
+    parser.add_argument('--rfile', dest='rfile', default="realOutput.txt")
+
+    args = parser.parse_args()
+
+    agent0 = ApproximateQAgent(0, epsilon=args.epsilon, alpha=args.alpha)
+
+    if args.vs_agent == 'QAgent':
+        agent1 = ApproximateQAgent(1, epsilon=0.5, alpha=0.2)
+    else:
+        agent1 = RandomAgent(1)
 
     game = Game([agent0, agent1], 0)
 
@@ -85,7 +100,10 @@ def main():
     print "|  TRAINING GAMES  |"
     print "--------------------"
     game.learn = True
-    runGameSet(game, agent0, TRAINING_GAMES, file("trainingOutput.txt", 'w'))
+    tf = file(args.tfile, 'w')
+    tf.write("Args are " + str(args) +"\n")
+    runGameSet(game, agent0, TRAINING_GAMES, tf)
+
 
     game.learn = False
     agent0.exploreRate = 0
@@ -99,7 +117,10 @@ def main():
     print "--------------------"
     print "|    REAL GAMES    |"
     print "--------------------"
-    runGameSet(game, agent0, REAL_GAMES, file("realOutput.txt", 'w'))
+
+    rf = file(args.rfile, 'w')
+    rf.write("Args are " + str(args) +"\n")
+    runGameSet(game, agent0, REAL_GAMES, rf)
 
 
 def runGameSet(game, agent0, numGames, f):
