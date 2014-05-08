@@ -98,19 +98,19 @@ We used reinforcement learning to create our AI. Because the state space of Stra
 These features should accurately capture the important aspects of a given state, and give our agent a way to approximately 
 evaluate the game states that it is in.\\
 
-We have created a model of the game in Python. The model is able to play two AIs against each other, or play an AI against a human opponent. We trained our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
+We have created a model of the game in Python. The model is able to play any two agents against each other, such as two AIs against each other, or play an AI against a human opponent. We trained our agent by running it against both an agent that always moves randomly, and another instance of the same learning agent, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
 
 One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
 Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
-pieces it has lost to in an attack. 
+pieces it has lost to in an attack. \\
 
 As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
 or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
 
-In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. The features that we used for this part of the game were
+In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. Each agent places one piece at a time, and uses features based on the pieces that it has previously placed to decide where to place the next piece. The features that we used for this part of the game were:
 \begin{itemize}
-\item The $x$ and $y$ position of each piece.
-\item The distance between each pair of pieces.
+\item The $x$ and $y$ position of each piece that has already been placed on the board.
+\item The distance between each pair of pieces that are already on the board.
 \end{itemize}
 
 The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
@@ -146,7 +146,8 @@ Regardless of whether the AI we write can meet these goals, we will learn how we
 \\
 
 \section{Evaluation}
-We were successful in getting the learning agent to play better than the random agent, as our learning agent consistently wins more than 50\% of the games that it plays against the random agent.\\
+We were successful in writing a Stratego game from scratch, and getting it to be playable by both humans and computer agents.
+We were also successful in getting the learning agent to play better than the random agent, as our learning agent consistently wins more than 50\% of the games that it plays against the random agent.\\
 
 We were not successful in getting the agent to play against online players, as we were more focused in getting it to play successfully in our own model of the game, and the agent can train much faster against itself than an online player.\\
 
@@ -172,13 +173,13 @@ We were successful in
 %do could involve creating a non-learning look ahead agent to train against or putting the agent online to have students play against it.
 
 \section{Challenges}
-We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also 
+We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also encountered problems where games would take an extremely large number of turns to finish, or would get stuck. We dealt with this by making a game time out if it reached over 2000 turns. We also discovered several bugs in ou game code, which after we fixed them caused the games to time out much less often.
 
 \section{Conclusion}
 In our project, we discovered that it is possible for a reinforcement learning agent to learn very quickly how to play Stratego, and learn feature weights that make sense. We thought that this was pretty impressive, given that the game has such a large state space, and that the agent cannot have possibly experienced all of the states. We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game. We also learned that it is important to make sure that the code for the base game works correctly before trying to get results or learn using it, as we found quite a few bugs in our game code, and the AI worked a lot better once they were fixed.
 \\
 
-A similar process to the one we used in this project would be effective for many board games. The fact that our learning agent can converge on a rate of winning so quickly (within 1000-2000 games) also suggests that we could add many more features and still have an agent that learns and plays relatively fast.\\
+A similar process to the one we used in this project would be effective for many board games. The fact that our learning agent can converge on a rate of winning so quickly (within 1000-2000 games) also suggests that we could add many more features and still have an agent that learns and plays relatively fast. We could also try to see if our stratego agent could be expanded to play on the classical Stratego board which is a 10 by 10 grid with 40 pieces per player. This game would have a much larger state space than the smaller version that our agent has been playing, but since our agent is relatuvely quick at learning on the small board, it would be interesting to see how it would deal with the larger one.\\
 
 It would also be interesting to see how our Stratego learning agent performs against an agent of another type (such as expectimax), or against another learning agent using different features or a different method or reward system.
 
