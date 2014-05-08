@@ -85,7 +85,7 @@ This paper is relevant to our project, as the environment in our game will not b
 \\
 
 \section{Method}
-We used reinforcement learning to create our AI. We used feature-based $Q$-learning. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we needed to determine relevant features to represent search states. We have decided that the relevant features include: 
+We used reinforcement learning to create our AI. Because the state space of Stratego is so large, we will not be able to actually explore or store it all, so we use feature-based Q-learning. We have decided that the relevant features include: 
 \begin{itemize}
 \item The number of pieces the agent has left and the reciprocal of the number of pieces the opponent has left
 \item The sum of the ranks of the agent's remaining pieces and the reciprocal of the sum of the ranks of the opponent's remaining pieces
@@ -94,13 +94,18 @@ We used reinforcement learning to create our AI. We used feature-based $Q$-learn
 \item The distance between the agent's flag and the nearest enemy piece 
 \item  The sum of the rows of all of the agent's and opponent's pieces on the board
 \item The number of squares adjacent to the agent's flag that are occupied by enemy pieces.
-\item Whether or not the game has been won.
 \end{itemize}
-These features should accurately capture the important aspects of a given state, and give our agent a way to accurately evaluate the game states that it is in.\\
-
-Because the agent does not know which of the other agent's pieces are at which location, there are multiple possible successor states for each state-action pair. We calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
+These features should accurately capture the important aspects of a given state, and give our agent a way to approximately 
+evaluate the game states that it is in.\\
 
 We have created a model of the game in Python. The model is able to play two AIs against each other, or play an AI against a human opponent. We trained our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
+
+One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
+Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
+pieces it has lost to in an attack. 
+
+As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
+or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
 
 In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. The features that we used for this part of the game were
 \begin{itemize}
@@ -108,7 +113,8 @@ In addition, we use feature-based learning for the setup phase of the game, when
 \item The distance between each pair of pieces.
 \end{itemize}
 
-The weights for each of these features get updated at the end of each game, so that the agent can learn what features make a good setup.
+The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
+to winning or losing a game.
 
 %When we have finished the project, we will have a $Q$-learning agent and a human agent that takes user input so that a human can play the game against the computer. To make the agent possible, we will also have a feature extractor and game state representation.\\
 

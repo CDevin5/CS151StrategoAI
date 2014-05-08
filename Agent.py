@@ -137,6 +137,7 @@ class ApproximateQAgent(Agent):
         self.exploreRate = epsilon
         self.learningRate = alpha
         self.discount = gamma
+        
 
     def getAction(self, state):
         legalActions = state.getLegalActions(self.index)
