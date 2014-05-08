@@ -133,7 +133,9 @@ in Method. These features are returned in a dictionary, and are used by our lear
 
 We have also written several different agents. We have a random agent that randomly picks any legal action to play. We have a human agent, that queries the user for a piece to move and a location to move it to. The agent then checks that the move is legal. The human agent that we have allows a player to perform any legal move on one of their pieces during their turn. We have a reinforcement learning agent that uses feature based $Q$-learning to learn feature weights and choose the best action based on those. The weights begin with values of zero, and are updated after every turn. We also use learning in the setup portion of the game, where we repeatedly give the agent one of the pieces it needs to place, and let it decide where to place the piece on the board, from any of the legal starting positions. The weights for the different setup features are initialized to zero and updated at the end of the game, based on whether the agent won or lost. During the setup phase, each agent iterates through a list of ranks of the pieces it has, and selects a position for each of those pieces to start at, based on the learned feature weights for the setup phase.\\
 
-We have several training sessions with the learning agent, both against the random agent and against itself. From this we have seen that the agent can successfully play games and update its feature weights.
+We have several training sessions with the learning agent, both against the random agent and against itself. From this we have seen that the agent can successfully play games and update its feature weights. After fixing some internal bugs, the length of
+the each went from 100-1000 turns to 30-100 turns. To make training easier we wrote a script that trains an agent for some
+number of games, then runs the agent without exploration for more games so we can test our win rates. 
 
 %We have successfully run several games playing the random agents against one another and they finished successfully, usually taking several hundred turns to finish and with each player winning about half the time. We can also successfully play games using the human agent by manually giving input as to where each piece should move.\\
 %
@@ -154,7 +156,7 @@ We were not successful in getting the agent to play against online players, as w
 We were successful in
 
 \section{Results}
-
+Here are the results from
 
 %\section{Feasibility}
 %We believe our project is feasible because, although the game of Stratego is complex and has hidden information, we are approaching the project in a fairly straightforward way. To get enough training time, we will train the agent against itself, a technique that worked very well for TD-Gammon\ref{TD-Gammon}. As none of us are particularly skilled Stratego players, it should be possible for the agent to learn to play better than us and better than the random agent. Our stretch goal of having the agent play against (and beat) good players online will be harder, and it’s feasibility will be easier to determine once we have started training the agent. The AI agent on {\texttt stratego.com} reasonably good at the game, and was able to win against us. 
@@ -173,7 +175,9 @@ We were successful in
 %do could involve creating a non-learning look ahead agent to train against or putting the agent online to have students play against it.
 
 \section{Challenges}
-We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also encountered problems where games would take an extremely large number of turns to finish, or would get stuck. We dealt with this by making a game time out if it reached over 2000 turns. We also discovered several bugs in ou game code, which after we fixed them caused the games to time out much less often.
+We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. \\
+
+We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also encountered problems where games would take an extremely large number of turns to finish, or would get stuck. We dealt with this by making a game time out if it reached over 2000 turns. We also discovered several bugs in ou game code, which after we fixed them caused the games to time out much less often.
 
 \section{Conclusion}
 In our project, we discovered that it is possible for a reinforcement learning agent to learn very quickly how to play Stratego, and learn feature weights that make sense. We thought that this was pretty impressive, given that the game has such a large state space, and that the agent cannot have possibly experienced all of the states. We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game. We also learned that it is important to make sure that the code for the base game works correctly before trying to get results or learn using it, as we found quite a few bugs in our game code, and the AI worked a lot better once they were fixed.
