@@ -75,7 +75,6 @@ class Game:
         return turns
 
 def main():
-
     agent0 = ApproximateQAgent(0, epsilon=0.5, alpha=0.2)
     agent1 = RandomAgent(1)
 
@@ -95,8 +94,6 @@ def main():
     game.agent0wins = 0
     game.agent1wins = 0
     game.num2000turns = 0
-
-    WEIGHTS = False
 
     print "\n"
     print "--------------------"

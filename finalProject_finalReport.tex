@@ -85,7 +85,7 @@ This paper is relevant to our project, as the environment in our game will not b
 \\
 
 \section{Method}
-We used reinforcement learning to create our AI. We used feature-based $Q$-learning. Because the state space of Stratego is so large, we will not be able to actually explore or store it all. To deal with this, we needed to determine relevant features to represent search states. We have decided that the relevant features include: 
+We used reinforcement learning to create our AI. Because the state space of Stratego is so large, we will not be able to actually explore or store it all, so we use feature-based Q-learning. We have decided that the relevant features include: 
 \begin{itemize}
 \item The number of pieces the agent has left and the reciprocal of the number of pieces the opponent has left
 \item The sum of the ranks of the agent's remaining pieces and the reciprocal of the sum of the ranks of the opponent's remaining pieces
@@ -94,21 +94,27 @@ We used reinforcement learning to create our AI. We used feature-based $Q$-learn
 \item The distance between the agent's flag and the nearest enemy piece 
 \item  The sum of the rows of all of the agent's and opponent's pieces on the board
 \item The number of squares adjacent to the agent's flag that are occupied by enemy pieces.
-\item Whether or not the game has been won.
 \end{itemize}
-These features should accurately capture the important aspects of a given state, and give our agent a way to accurately evaluate the game states that it is in.\\
+These features should accurately capture the important aspects of a given state, and give our agent a way to approximately 
+evaluate the game states that it is in.\\
 
-Because the agent does not know which of the other agent's pieces are at which location, there are multiple possible successor states for each state-action pair. We calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
+We have created a model of the game in Python. The model is able to play any two agents against each other, such as two AIs against each other, or play an AI against a human opponent. We trained our agent by running it against both an agent that always moves randomly, and another instance of the same learning agent, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
 
-We have created a model of the game in Python. The model is able to play two AIs against each other, or play an AI against a human opponent. We trained our agent by running two versions of the agent against each other, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
+One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
+Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
+pieces it has lost to in an attack. \\
 
-In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. The features that we used for this part of the game were
+As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
+or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
+
+In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. Each agent places one piece at a time, and uses features based on the pieces that it has previously placed to decide where to place the next piece. The features that we used for this part of the game were:
 \begin{itemize}
-\item The $x$ and $y$ position of each piece.
-\item The distance between each pair of pieces.
+\item The $x$ and $y$ position of each piece that has already been placed on the board.
+\item The distance between each pair of pieces that are already on the board.
 \end{itemize}
 
-The weights for each of these features get updated at the end of each game, so that the agent can learn what features make a good setup.
+The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
+to winning or losing a game.
 
 %When we have finished the project, we will have a $Q$-learning agent and a human agent that takes user input so that a human can play the game against the computer. To make the agent possible, we will also have a feature extractor and game state representation.\\
 
@@ -116,13 +122,16 @@ The weights for each of these features get updated at the end of each game, so t
 
 We have completed a working Stratego game, an agent that moves according to human input, an agent that always takes a random move, and a feature-based $Q$-learning agent. The game is text-based, using a grid system based off of the provided grid-world code from Project 3, and tracks the position and rank of every piece on the board. To preserve the unknowns in the game, when agent asks the system for the state, the system only gives it the location of the opponents pieces and not the identities. An agent can ask the game state for a list of all the legal actions that it can perform, and when it chooses one, the game state can update itself to take the new action into account. The game state can also check whether the state is terminal.\\
 
-We have decided to play the game using an 8 by 8 grid as the board with 10 pieces per player rather than a 10 by 10 board with 40 pieces per player as in the classical game, because this smaller board and piece selection is an option available in the online game, and it will have a smaller state space and number of possible actions than the larger board. We will still be able to play our game and test it against online players, but the time our agent will take to learn to play will be reduced due to the smaller board size and fewer number of pieces.\\
+We have decided to play the game using an 8 by 8 grid as the board with 10 pieces per player (an option available in the online game) rather than a 10 by 10 board with 40 pieces per player as in the original game because it has a smaller state space and number of possible actions than the larger board. This will reduce the amount of time needed to learn how to play  due to the smaller board size and fewer number of pieces.\\
 
-The pieces are represented by their own class. They each have a rank, position, and agent index (which indicates which player the piece belongs to). Pieces with ranks of lower numbers are more powerful than those with higher numbers, and when two pieces fight one another, we have written an attack method to decide which piece is the winner.\\
+The pieces are represented by their own class. They each have a rank, position, and agent index (which indicates which player the piece belongs to). Pieces with ranks of lower numbers are more powerful than those with higher numbers. \\
 
-We have written a feature extractor written that examines the game state and extracts its relevant features, which are described above. These features are returned in a list, and will be used by our learning agent to evaluate a given state.\\
+We have written 2 feature extractors that examine the game state and extract relevant features. The first is used during 
+the setup phase of the game, and the second is used during the normal part of the game. The setup phase occurs before the 
+turn-based part of the game begins, so this feature extractor does not take into account the agent or state, but instead merely examines a list of the pieces that have already been placed so that it can extract features to decide where to place the next piece.The features for each are described
+in Method. These features are returned in a dictionary, and are used by our learning agent to evaluate a given state.\\
 
-We have also written several different agents. We have a random agent, that randomly picks any legal action to play. We have a human agent, that queries the user for a piece to move and a location to lose it to. The agent then checks that the move is legal. The human agent that we have allows a player to perform any legal move on one of their pieces during their turn. We have a reinforcement learning agent that uses feature based $Q$-learning to learn feature weights and choose the best action based on those. The weights begin with values of zero, and are updated after every turn. We also use learning in the setup portion of the game, where we repeatedly give the agent one of the pieces it needs to place, and let it decide where to place the piece on the board, from any of the legal starting positions. The weights for the different setup features are updated at the end of the game, based on whether the agent won or lost.\\
+We have also written several different agents. We have a random agent that randomly picks any legal action to play. We have a human agent, that queries the user for a piece to move and a location to move it to. The agent then checks that the move is legal. The human agent that we have allows a player to perform any legal move on one of their pieces during their turn. We have a reinforcement learning agent that uses feature based $Q$-learning to learn feature weights and choose the best action based on those. The weights begin with values of zero, and are updated after every turn. We also use learning in the setup portion of the game, where we repeatedly give the agent one of the pieces it needs to place, and let it decide where to place the piece on the board, from any of the legal starting positions. The weights for the different setup features are initialized to zero and updated at the end of the game, based on whether the agent won or lost. During the setup phase, each agent iterates through a list of ranks of the pieces it has, and selects a position for each of those pieces to start at, based on the learned feature weights for the setup phase.\\
 
 We have several training sessions with the learning agent, both against the random agent and against itself. From this we have seen that the agent can successfully play games and update its feature weights.
 
@@ -137,7 +146,8 @@ Regardless of whether the AI we write can meet these goals, we will learn how we
 \\
 
 \section{Evaluation}
-We were successful in getting the learning agent to play better than the random agent, as our learning agent consistently wins more than 50\% of the games that it plays against the random agent.\\
+We were successful in writing a Stratego game from scratch, and getting it to be playable by both humans and computer agents.
+We were also successful in getting the learning agent to play better than the random agent, as our learning agent consistently wins more than 50\% of the games that it plays against the random agent.\\
 
 We were not successful in getting the agent to play against online players, as we were more focused in getting it to play successfully in our own model of the game, and the agent can train much faster against itself than an online player.\\
 
@@ -162,8 +172,16 @@ We were successful in
 %Getting these things done will allow us to mostly finish the project. Additional tasks to 
 %do could involve creating a non-learning look ahead agent to train against or putting the agent online to have students play against it.
 
-\section{Conclusion}
+\section{Challenges}
+We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also encountered problems where games would take an extremely large number of turns to finish, or would get stuck. We dealt with this by making a game time out if it reached over 2000 turns. We also discovered several bugs in ou game code, which after we fixed them caused the games to time out much less often.
 
+\section{Conclusion}
+In our project, we discovered that it is possible for a reinforcement learning agent to learn very quickly how to play Stratego, and learn feature weights that make sense. We thought that this was pretty impressive, given that the game has such a large state space, and that the agent cannot have possibly experienced all of the states. We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game. We also learned that it is important to make sure that the code for the base game works correctly before trying to get results or learn using it, as we found quite a few bugs in our game code, and the AI worked a lot better once they were fixed.
+\\
+
+A similar process to the one we used in this project would be effective for many board games. The fact that our learning agent can converge on a rate of winning so quickly (within 1000-2000 games) also suggests that we could add many more features and still have an agent that learns and plays relatively fast. We could also try to see if our stratego agent could be expanded to play on the classical Stratego board which is a 10 by 10 grid with 40 pieces per player. This game would have a much larger state space than the smaller version that our agent has been playing, but since our agent is relatuvely quick at learning on the small board, it would be interesting to see how it would deal with the larger one.\\
+
+It would also be interesting to see how our Stratego learning agent performs against an agent of another type (such as expectimax), or against another learning agent using different features or a different method or reward system.
 
 \section{References}
 Hasinoff, S. W. 2003. ``Reinforcement Learning for problems with Hidden State''. Department of Computer Science, University of Toronto.\\

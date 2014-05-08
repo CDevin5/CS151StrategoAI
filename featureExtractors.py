@@ -25,9 +25,6 @@ class FeatureExtractors:
         feats["mysumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(me)])/80.0
         feats["yoursumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(you)])/80.0
 
-        feats["iwon"] = state.isWon(me)
-        feats["youwon"] = state.isWon(you)
-
         flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]
         surrpieces = [state.getPieceAtPos(p) for p in surroundings]
