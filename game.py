@@ -9,8 +9,8 @@ SCORE = True
 WEIGHTS = True
 SETUP = False
 
-TRAINING_GAMES = 2#000
-REAL_GAMES = 1#000
+TRAINING_GAMES = 2000
+REAL_GAMES = 1000
 
 class Game:
     def __init__(self, agents, startAgentIndex):
