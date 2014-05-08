@@ -102,7 +102,7 @@ We have created a model of the game in Python. The model is able to play two AIs
 
 One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
 Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
-pieces it has lost to in an attack. 
+pieces it has lost to in an attack. \\
 
 As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
 or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
@@ -172,7 +172,7 @@ We were successful in
 %do could involve creating a non-learning look ahead agent to train against or putting the agent online to have students play against it.
 
 \section{Challenges}
-We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also 
+We faced several challenges during this project. First of all, we decided to base our code for the learning agent off of the code we used in Project 3. This code was very large and complicated, and we had to figure out where and when many different things were getting called. We ended up rewriting a lot of the code from scratch, and it probably would ahave been simpler if we had started from scratch instead. We also had problems with learning the feature weights, where the weights would grow very large very fast, and overflow. We solved this by normalizing the weights after every update -- dividing them all by the largest weight. We also encountered problems where games would take an extremely large number of turns to finish, or would get stuck. We dealt with this by making a game time out if it reached over 2000 turns. We also discovered several bugs in ou game code, which after we fixed them caused the games to time out much less often.
 
 \section{Conclusion}
 In our project, we discovered that it is possible for a reinforcement learning agent to learn very quickly how to play Stratego, and learn feature weights that make sense. We thought that this was pretty impressive, given that the game has such a large state space, and that the agent cannot have possibly experienced all of the states. We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game. We also learned that it is important to make sure that the code for the base game works correctly before trying to get results or learn using it, as we found quite a few bugs in our game code, and the AI worked a lot better once they were fixed.
