@@ -8,6 +8,9 @@
 \usepackage{helvet}
 \usepackage{courier}
 \usepackage{amsmath}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+
 \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
@@ -116,6 +119,8 @@ In addition, we use feature-based learning for the setup phase of the game, when
 The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
 to winning or losing a game.
 
+
+
 %When we have finished the project, we will have a $Q$-learning agent and a human agent that takes user input so that a human can play the game against the computer. To make the agent possible, we will also have a feature extractor and game state representation.\\
 
 \section{Current Work}
@@ -156,6 +161,28 @@ We were not successful in getting the agent to play against online players, as w
 We were successful in
 
 \section{Results}
+
+\begin{figure*}
+  \vspace{-2em}
+  \begin{center}
+    \includegraphics[width=\textwidth]{a1e5training.png}
+    \vspace{-3em}
+  \caption{Training progress of the learning agent against a random agent.\label{a1e5}}
+  \vspace{-1em}
+  \end{center}
+\end{figure*}
+
+\begin{figure*}
+  \vspace{-2em}
+  \begin{center}
+    \includegraphics[width=\textwidth]{epsilonData.png}
+    \vspace{-3em}
+  \caption{Win rate dependence on $\epsilon$ (explore rate) against a random agent. Lower $\epsilon$ means less exploring. 
+  All of these runs use a decreasing alpha.\label{epsilon}}
+  \vspace{-1em}
+  \end{center}
+\end{figure*}
+
 Here are the results from
 
 %\section{Feasibility}
