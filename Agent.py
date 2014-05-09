@@ -149,7 +149,7 @@ class ApproximateQAgent(Agent):
             return random.choice(legalActions)
 
         # Exploit:
-        return max((self.getQValue(state, a), a) for a in legalActions)[1]
+        return randoMax([(self.getQValue(state, a), a) for a in legalActions])
 
     def getValue(self, state):
         """
@@ -217,7 +217,7 @@ class ApproximateQAgent(Agent):
             return random.choice(legalPlacements)
 
         # Exploit:
-        return max((self.getSetupQValue(piecesPlaced, (pos, rank)), pos) for pos in legalPlacements)[1]
+        return randoMax([(self.getSetupQValue(piecesPlaced, (pos, rank)), pos) for pos in legalPlacements])
 
     def getSetupValue(self, pieces):
         features = self.setupFeatExtractor.getFeatures(pieces)
@@ -252,3 +252,15 @@ class ApproximateQAgent(Agent):
         else:
             self.updateSetupWeights(-1)
 
+def randoMax(l):
+    bestVal = -float("inf")
+    bestKeys = []
+
+    for (val, key) in l:
+        if val > bestVal:
+            bestVal = val
+            bestKeys = [key]
+        elif val == bestVal:
+            bestKeys.append(key)
+
+    return random.choice(bestKeys)

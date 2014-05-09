@@ -10,20 +10,23 @@ class FeatureExtractors:
         flag = state.getFlag(me)
         feats = Counter()
 
-        feats["mynumpieces"] = len(state.getAlivePieces(me))/10.0
-        feats["yournumpieces"] = len(state.getAlivePieces(you))/10.0
+        myAlive = state.getAlivePieces(me)
+        yourAlive = state.getAlivePieces(you)
 
-        feats["mypiecesum"] = sum([p.rank for p in state.getAlivePieces(me)])/52.0
-        feats["yourpiecesum"] = sum([p.rank for p in state.getAlivePieces(you)])/52.0
+        feats["mynumpieces"] = len(myAlive)/10.0
+        feats["yournumpieces"] = len(yourAlive)/10.0
 
-        feats["numbombdiffusers"] = sum([1 if p.rank == piece.MINER else 0 for p in state.getAlivePieces(me)])/3.0
+        feats["mypiecesum"] = sum([p.rank for p in myAlive])/52.0
+        feats["yourpiecesum"] = sum([p.rank for p in yourAlive])/52.0
 
-        feats["numbombs"] = sum([1 if p.rank == piece.BOMB else 0 for p in state.getAlivePieces(me)])/3.0
+        feats["numbombdiffusers"] = sum([1 if p.rank == piece.MINER else 0 for p in myAlive])/3.0
 
-        feats["distflagenemy"] = max([manhattanDistance(flag, p) for p in state.getAlivePieces(you)])/15.0
+        feats["numbombs"] = sum([1 if p.rank == piece.BOMB else 0 for p in myAlive])/3.0
 
-        feats["mysumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(me)])/80.0
-        feats["yoursumofpiecesrows"] = sum([p.position[1] for p in state.getAlivePieces(you)])/80.0
+        feats["distflagenemy"] = float("inf") if len(yourAlive) == 0 else min([manhattanDistance(flag, p) for p in yourAlive])/15.0
+
+        feats["mysumofpiecesrows"] = sum([p.position[1] for p in myAlive])/80.0
+        feats["yoursumofpiecesrows"] = sum([p.position[1] for p in yourAlive])/80.0
 
         flagx, flagy = flag.position
         surroundings = [(flagx, flagy+1), (flagx, flagy-1), (flagx-1, flagy), (flagx+1, flagy)]
