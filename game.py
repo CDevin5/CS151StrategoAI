@@ -79,10 +79,11 @@ def main():
 
     parser = argparse.ArgumentParser(description='Process inputs.')
     parser.add_argument('--vs', dest='vs_agent', choices=['QAgent', 'Random'])
-    parser.add_argument('-a', dest='alpha', type=float)
-    parser.add_argument('-e', dest='epsilon', type=float)
+    parser.add_argument('-a', dest='alpha', type=float, default=0.1)
+    parser.add_argument('-e', dest='epsilon', type=float, default=0.5)
     parser.add_argument('--tfile', dest='tfile', default="trainingOutput.txt")
     parser.add_argument('--rfile', dest='rfile', default="realOutput.txt")
+    parser.add_argument('-l', dest='learn', type=int, default=1)
 
     args = parser.parse_args()
 
@@ -99,7 +100,7 @@ def main():
     print "--------------------"
     print "|  TRAINING GAMES  |"
     print "--------------------"
-    game.learn = True
+    game.learn = args.learn
     tf = file(args.tfile, 'w')
     tf.write("Args are " + str(args) +"\n")
     runGameSet(game, agent0, TRAINING_GAMES, tf)
