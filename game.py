@@ -89,7 +89,7 @@ def main():
     agent0 = ApproximateQAgent(0, epsilon=args.epsilon, alpha=args.alpha)
 
     if args.vs_agent == 'QAgent':
-        agent1 = ApproximateQAgent(1, epsilon=0.5, alpha=0.2)
+        agent1 = ApproximateQAgent(1, epsilon=0.5, alpha=0.1)
     else:
         agent1 = RandomAgent(1)
 
