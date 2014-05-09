@@ -263,4 +263,6 @@ def randoMax(l):
         elif val == bestVal:
             bestKeys.append(key)
 
+    if bestKeys == []:
+        return None
     return random.choice(bestKeys)
