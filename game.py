@@ -16,6 +16,7 @@ class Game:
     def __init__(self, agents, startAgentIndex):
         self.agents = agents
         self.startAgentIndex = startAgentIndex
+        self.numGames = 0
 
         self.agent0wins = 0
         self.agent1wins = 0
@@ -58,7 +59,9 @@ class Game:
             action = agent.getAction(self.state)
 
             nextState = self.state.getSuccessor(agentIndex, action)
+            self.numGames += 1
             if self.learn:
+                agent.learningRate = 1.0/self.numGames
                 agent.update(self.state, action, nextState)
             self.state = nextState
 
