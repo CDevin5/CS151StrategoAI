@@ -153,12 +153,13 @@ Regardless of whether the AI we write can meet these goals, we will learn how we
 \\
 
 \section{Evaluation}
-We were successful in writing a Stratego game from scratch, and getting it to be playable by both humans and computer agents.
-We were also successful in getting the learning agent to play better than the random agent, as our learning agent consistently wins more than 50\% of the games that it plays against the random agent.\\
-
-We were not successful in getting the agent to play against online players, as we were more focused in getting it to play successfully in our own model of the game, and the agent can train much faster against itself than an online player.\\
-
-We were successful in
+At the time of our presentation, we thought that our agent was winning a majority of the time. This turned out to be caused
+by a couple bugs in the game that did not always identify when a player should have won. 
+By watching games happen, we found a number of 
+issues and fixed them. We have now successfully implemented a correct Stratego game engine. As discussed below, the learning 
+agent performs rather poorly on this accurate version of the game and loses against random, perhaps because of non-ideal
+feature or parameter choice. We did not achieve our goal of beating random because implementing the entire game of Stratego 
+correctly turned out to be more difficult than anticipated.
 
 \section{Results}
 
