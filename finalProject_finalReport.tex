@@ -35,7 +35,7 @@ Claremont, California 91711\\
 \maketitle
 
 \section{Problem }
-We plan to write a $Q$-learning agent that can learn to play the game Stratego. Stratego is a board game with two players. Each player has several pieces representing soldiers, bombs, and a flag. The objective of the game is to find the opponent's flag. The win condition is to either capture the opponent's flag or capture so many of their pieces that they can no longer make a move. \\
+We wrote a $Q$-learning agent that can learn to play the game Stratego. Stratego is a board game with two players. Each player has several pieces representing soldiers, bombs, and a flag. The objective of the game is to find the opponent's flag. The win condition is to either capture the opponent's flag or capture so many of their pieces that they can no longer make a move. \\
 
 There are two phases to the game: the setup phase and that play phase. In the setup phase, each player sets their pieces up on their side of the board, in locations that they think will be most beneficial to the game. Then, in the play phase, each player may move only one of their pieces to a legal square. Our goal will be to implement an agent that can learn how to react to both of these phases.\\
 
@@ -88,7 +88,7 @@ This paper is relevant to our project, as the environment in our game will not b
 \\
 
 \section{Method}
-We used reinforcement learning to create our AI. Because the state space of Stratego is so large, we will not be able to actually explore or store it all, so we use feature-based Q-learning. We have decided that the relevant features include: 
+We used reinforcement learning to create our AI. Because the state space of Stratego is so large, we cannot actually explore or store it all, so we use feature-based Q-learning. We have decided that the relevant features include: 
 \begin{itemize}
 \item The number of pieces the agent has left and the reciprocal of the number of pieces the opponent has left
 \item The sum of the ranks of the agent's remaining pieces and the reciprocal of the sum of the ranks of the opponent's remaining pieces
@@ -98,17 +98,14 @@ We used reinforcement learning to create our AI. Because the state space of Stra
 \item  The sum of the rows of all of the agent's and opponent's pieces on the board
 \item The number of squares adjacent to the agent's flag that are occupied by enemy pieces.
 \end{itemize}
-These features should accurately capture the important aspects of a given state, and give our agent a way to approximately 
-evaluate the game states that it is in.\\
+These features should accurately capture the important aspects of a given state, and give our agent a way to approximately evaluate the game states that it is in.\\
 
 We have created a model of the game in Python. The model is able to play any two agents against each other, such as two AIs against each other, or play an AI against a human opponent. We trained our agent by running it against both an agent that always moves randomly, and another instance of the same learning agent, each using the features mentioned above to update their $Q$-values and improve their playing strategies.\\
 
-One of the interesting aspects of Stratego is that each player does not know the identities of theother player's pieces. 
-Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb) which
-pieces it has lost to in an attack. \\
+One of the interesting aspects of Stratego is that each player does not know the identities of the other player's pieces.  Our agent deals with this by remembering which pieces have moved (if a piece has moved it cannot be a flag or bomb), which pieces have moved more than one square at a time (and are therefore scouts), and which pieces it has lost to in an attack. \\
 
 As there can be multiple possible successor states for each state-action pair (if a piece has the possibility of winning
-or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities using a list of the pieces that the enemy agent has in play, and keep track of the ones that we know the rank of. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
+or losing an attack), we calculate the $Q$-value of each state-action pair by finding all of the possible successors of a given state-action pair, and calculating their probabilities. We calculate these probabilities by using a list of the pieces that the enemy agent has in play, and keeping track of the ones whose rank we know. Then to calculate the $Q$-value, we take the sum of the values of each of the successor states multiplied by their probability.\\
 
 In addition, we use feature-based learning for the setup phase of the game, when each agent chooses where to place each of its pieces. Each agent places one piece at a time, and uses features based on the pieces that it has previously placed to decide where to place the next piece. The features that we used for this part of the game were:
 \begin{itemize}
@@ -116,8 +113,7 @@ In addition, we use feature-based learning for the setup phase of the game, when
 \item The distance between each pair of pieces that are already on the board.
 \end{itemize}
 
-The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead
-to winning or losing a game.
+The weights for each of these features get updated at the end of each game, so that the agent can learn what features lead to winning or losing a game.
 
 
 
@@ -140,16 +136,16 @@ We have also written several different agents. We have a random agent that rando
 
 We have several training sessions with the learning agent, both against the random agent and against itself. From this we have seen that the agent can successfully play games and update its feature weights. After fixing some internal bugs, the length of
 the each went from 100-1000 turns to 30-100 turns. To make training easier we wrote a script that trains an agent for some
-number of games, then runs the agent without exploration for more games so we can test our win rates. 
+number of games, then runs the agent without learning for more games so we can test our win rates. 
 
 %We have successfully run several games playing the random agents against one another and they finished successfully, usually taking several hundred turns to finish and with each player winning about half the time. We can also successfully play games using the human agent by manually giving input as to where each piece should move.\\
 %
 %A difficulty we face at the moment is setting up the game. When playing Stratego, a large portion of the game is choosing where to place each piece before starting the game. So far, we have an algorithm for generating random setups, but we still need to implement reinforcement learning on the setup. \\
 
 \section{Metrics of Success}
-We will measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We will first have the agent play against a random player. Once it can do better than random, we will use it to play against humans online, and against ourselves.  To play online, we will make a version of the game where we can input the opponent's moves and our AI can tell us what move to make inresponse.\\
+We planned to measure the success of our AI agent by counting how many times it wins or loses against a variety of opponents. We were going to first have the agent play against a random player. Once it could do better than random, we would use it to play against humans online, and against ourselves.  To play online, we would make a version of the game where we can input the opponent's moves and our AI can tell us what move to make in response.\\
 
-Regardless of whether the AI we write can meet these goals, we will learn how well reinforcement learning can work on a game with a state space as large as that of Stratego, as well as gain a lot of experience in writing artificially intelligent agents and figuring out which features of the world state would contribute most towards an artificially intelligent agent learning intelligent behavior.
+Even though the AI we wrote did not meet these goals, we learned how well reinforcement learning can work on a game with a state space as large as that of Stratego, and we gained a lot of experience in writing artificially intelligent agents and figuring out which features of the world state would contribute most towards an artificially intelligent agent learning intelligent behavior.
 \\
 
 \section{Evaluation}
