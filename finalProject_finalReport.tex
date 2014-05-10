@@ -178,7 +178,7 @@ correctly turned out to be more difficult than anticipated.
   \begin{center}
     \includegraphics[width=\textwidth]{varae5training.png}
     \vspace{-3em}
-  \caption{Training progress of the learning agent against a random agent.\label{a1e5}}
+  \caption{Training progress of the learning agent against a random agent.\label{ave5}}
   \vspace{-1em}
   \end{center}
 \end{figure*}
@@ -194,11 +194,23 @@ correctly turned out to be more difficult than anticipated.
   \end{center}
 \end{figure*}
 
-The results of our training sessions with the learning agent are shown in the graphs above. Figure 1 above shows the training data of the learning agent against a random agent, with $\alpha=0.1$ and $\epsilon=0.5$. After this training session, we lowered the $\alpha$ and $\epsilon$ values to zero, and played 1000 more games. Our agent won 70\% of these games against the random agent. From this, we can see that event though the agent does poorly during the training sessions, it can have very good results once it has learned enough to stop exploring and start exploiting what it has learned. This meets our goal of getting our agent to play better than a random agent, so we have suceeded in that respect. The results of training sessions with other values of $\epsilon$ are shown in Figure 4.\\
+\begin{figure*}
+  \vspace{-2em}
+  \begin{center}
+    \includegraphics[width=\textwidth]{valpha_qtraining.png}
+    \vspace{-3em}
+  \caption{Training progress of the learning agent against itself.\label{qtrain}}
+  \vspace{-1em}
+  \end{center}
+\end{figure*}
 
-Figure 2 above shows similar data to Figure 1, except that we use a variable $\alpha$ that is set to 1/total number of turns. We can see that these values get a much better maximum win rate during training than the fixed alpha in Figure 1 does. After this training session, we sett $\alpha$ and $\epsilon$ equal to zero, and ran another 1000 games. The learning agent won 30\% of these games against the random agent. The results from other tests with different values of $\epsilon$ and variable $\alpha$ are shown in Figure 3 above. We can see that although the win rates during the training sessions are quite good, they decrease after training has been turned off.\\
+The results of our training sessions with the learning agent are shown in the graphs above. Figure \ref{a1e5} above shows the training data of the learning agent against a random agent, with $\alpha=0.1$ and $\epsilon=0.5$. After this training session, we lowered the $\alpha$ and $\epsilon$ values to zero, and played 1000 more games. Our agent won 70\% of these games against the random agent. From this, we can see that event though the agent does poorly during the training sessions, it can have very good results once it has learned enough to stop exploring and start exploiting what it has learned. This meets our goal of getting our agent to play better than a random agent, so we have suceeded in that respect. The results of training sessions with other values of $\epsilon$ are shown in Figure .\\
 
-From this, we can conclude that 0.1 is a good value for $\alpha$ and 0.5 for $\epsilon$. We can also see that values of $\epsilon$ that are too high can make the win rate before and after training very different.
+Figure \ref{ave5} above shows similar data to Figure \ref{a1e5}, except that we use a variable $\alpha$ that is set to 1/total number of turns. We can see that these values get a much better maximum win rate during training than the fixed alpha in Figure \ref{a1e5} does. After this training session, we sett $\alpha$ and $\epsilon$ equal to zero, and ran another 1000 games. The learning agent won 30\% of these games against the random agent. The results from other tests with different values of $\epsilon$ and variable $\alpha$ are shown in Figure \ref{epsilon} above. We can see that although the win rates during the training sessions are quite good, they decrease after training has been turned off.\\
+
+From this, we can conclude that 0.1 is a good value for $\alpha$ and 0.5 for $\epsilon$. We can also see that values of $\epsilon$ that are too high can make the win rate before and after training very different.\\
+
+In Figure \ref{qtrain} we can see the training data of our learning agent playing against itself, both with feature weights initialized to zero. It is interesting to note that one of the agents has gained the advantage over the other one, and has consistently done better in the games. This could be due to it randomly getting more experience, or to some potential bias in the features we chose.
 
 %\section{Feasibility}
 %We believe our project is feasible because, although the game of Stratego is complex and has hidden information, we are approaching the project in a fairly straightforward way. To get enough training time, we will train the agent against itself, a technique that worked very well for TD-Gammon\ref{TD-Gammon}. As none of us are particularly skilled Stratego players, it should be possible for the agent to learn to play better than us and better than the random agent. Our stretch goal of having the agent play against (and beat) good players online will be harder, and it’s feasibility will be easier to determine once we have started training the agent. The AI agent on {\texttt stratego.com} reasonably good at the game, and was able to win against us. 
