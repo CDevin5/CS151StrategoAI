@@ -238,11 +238,14 @@ We also had problems with learning the feature weights, where the weights would 
 
 \section{Conclusion}
 In our project, we learned that without a correct implementation of the game, it is difficult to make a good learning
-agent.
- We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game. We also learned that it is important to make sure that the code for the base game works correctly before trying to get results or learn using it, as we found quite a few bugs in our game code, and the AI worked a lot better once they were fixed.
-\\
-
-A similar process to the one we used in this project would be effective for many board games. The fact that our learning agent can converge on a rate of winning so quickly (within 1000-2000 games) also suggests that we could add many more features and still have an agent that learns and plays relatively fast. We could also try to see if our stratego agent could be expanded to play on the classical Stratego board which is a 10 by 10 grid with 40 pieces per player. This game would have a much larger state space than the smaller version that our agent has been playing, but since our agent is relatuvely quick at learning on the small board, it would be interesting to see how it would deal with the larger one.\\
+agent. However, by tuning the parameters, we were able to have an agent learn to beat a random agent.
+ We also learned how important the setup phase was to the outcome of the game, as our agent greatly improved after we implemented that aspect of the game.
+\\ \\
+As we spent a lot of time fixing the game engine, there is still work to be done to improve the learning agent. Notably, 
+finding more features would probably help the agent reach higher win rates. Since the agent seems to level off pretty 
+quickly, it is doubtful that increasing training time without otherwise changing the learning agent would be fruitful.
+\\ \\
+Once the learning agent is improved, a similar process to the one we used in this project could be effective for many board games. The fact that our learning agent can converge on a rate of winning so quickly (within 1000-2000 games) also suggests that we could add many more features and still have an agent that learns and plays relatively fast. We could also try to see if our stratego agent could be expanded to play on the classical Stratego board which is a 10 by 10 grid with 40 pieces per player. This game would have a much larger state space than the smaller version that our agent has been playing, but since our agent is relatuvely quick at learning on the small board, it would be interesting to see how it would deal with the larger one.\\
 
 It would also be interesting to see how our Stratego learning agent performs against an agent of another type (such as expectimax), or against another learning agent using different features or a different method or reward system.
 
